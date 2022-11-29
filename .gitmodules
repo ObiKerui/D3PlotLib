@@ -1,0 +1,4 @@
+[submodule "buildtools"]
+	path = buildtools
+	url = https://gitlab.com/ObiKerui/buildtools.git
+	branch = production
