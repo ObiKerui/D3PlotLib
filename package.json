@@ -1,0 +1,42 @@
+{
+  "name": "buildtools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serveold": "cross-env NODE_ENV=development webpack",
+    "serve": "cross-env NODE_ENV=development webpack --config userApp/webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config userApp/webpack.config.js",
+    "servereact": "cross-env NODE_ENV=development webpack --config reactApp/webpack.config.js"   
+  },
+  "author": "Craig Sharp",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-react": "^7.18.6",
+    "@vue/compiler-sfc": "^3.2.29",
+    "babel-loader": "^8.2.3",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.6.0",
+    "html-webpack-plugin": "^5.5.0",
+    "js-yaml": "^4.1.0",
+    "json-loader": "^0.5.7",
+    "mini-css-extract-plugin": "^2.5.3",
+    "npm-check": "^6.0.1",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "vue": "^3.2.29",
+    "vue-loader": "^17.0.0",
+    "vue-style-loader": "^4.1.3",
+    "webpack": "^5",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.3",
+    "webpack-nano": "^1.1.1",
+    "webpack-plugin-serve": "^1.6.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
