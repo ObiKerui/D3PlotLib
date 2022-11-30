@@ -2,6 +2,7 @@
 
 const HtmlPlugin = require('html-webpack-plugin');
 const { merge } = require('webpack-merge');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path');
 
 module.exports = () => {
@@ -10,9 +11,8 @@ module.exports = () => {
     const projectConfig = {
         context: rootDir,
         entry: {
-            propertyCalculator: './propertyCalculator/main.ts',
-            d3Visualisations: './d3Visualisations/main.ts',            
-            appmodule: './userApp/main.ts'
+            d3PlotLib: './d3PlotLib/main.ts',            
+            appmodule: './userApp/main.jsx'
         },
         plugins: [
             new HtmlPlugin({
@@ -20,6 +20,11 @@ module.exports = () => {
                 filename: 'index.html',
                 template: path.resolve(rootDir, 'userApp/index.html'),
                 inject: 'body'
+            }),
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: "userApp/assets", to: "assets" },
+                ],
             })
         ],
         output: {

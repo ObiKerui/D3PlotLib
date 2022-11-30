@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serveold": "cross-env NODE_ENV=development webpack",
     "serve": "cross-env NODE_ENV=development webpack --config userApp/webpack.config.js",
-    "build": "cross-env NODE_ENV=production webpack --config userApp/webpack.config.js",
-    "servereact": "cross-env NODE_ENV=development webpack --config reactApp/webpack.config.js"   
+    "build": "cross-env NODE_ENV=production webpack --config userApp/webpack.config.js"
   },
   "author": "Craig Sharp",
   "license": "ISC",
@@ -16,6 +15,7 @@
     "@babel/core": "^7.16.12",
     "@babel/preset-react": "^7.18.6",
     "babel-loader": "^8.2.3",
+    "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.6.0",
     "html-webpack-plugin": "^5.5.0",
@@ -23,6 +23,7 @@
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^2.5.3",
     "npm-check": "^6.0.1",
+    "style-loader": "^3.3.1",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.5",
     "webpack": "^5",
