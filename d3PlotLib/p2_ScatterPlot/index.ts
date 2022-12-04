@@ -115,7 +115,7 @@ export default function () {
     let yScale = _container.yScale
     let colours = obj.colours ?? ['red', 'green', 'blue', 'gray', 'black']
 
-    console.log('scatter plot draw : xs / ys / test xscale / test yscale ', ys)
+    // console.log('scatter plot draw : xs / ys / test xscale / test yscale ', ys)
 
     let alpha = obj.alpha
     let styles : [] = obj.styles

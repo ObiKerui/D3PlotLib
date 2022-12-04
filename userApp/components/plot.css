@@ -1,0 +1,44 @@
+.plot {
+  --hue: 15;
+  --saturation: 60%;
+  --level: 90%;
+  --opacity: 50%;
+  display: flex;
+  flex-direction: row;
+  padding: 0.8em 1.2em;
+  color: hsl(185, 40%, 25%);
+  /* background-color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity)); */
+}
+
+.plot--container {
+  display: flex;
+  flex-direction: column;
+}
+
+.plot--container h3 {
+    color: #2f5926;
+}
+
+.plot--controls {
+    display: flex;
+    flex-direction: row;
+}
+
+.plot--chart {
+  --level: 100%;
+  color: #2f5926;
+  /* background-color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity)); */
+}
+
+.plot--description {
+    --hue: 180;
+  --level: 5%;
+  color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity));
+  font-size: 0.9em;
+}
+
+.plot--code {
+  --level: 100%;
+  color: #2f5926;
+  background-color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity));
+}

@@ -3,6 +3,7 @@
 const HtmlPlugin = require('html-webpack-plugin');
 const { merge } = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const path = require('path');
 
 module.exports = () => {
@@ -12,7 +13,7 @@ module.exports = () => {
         context: rootDir,
         entry: {
             d3PlotLib: './d3PlotLib/main.ts',            
-            appmodule: './userApp/main.jsx'
+            appmodule: './userApp/main.tsx'
         },
         plugins: [
             new HtmlPlugin({
@@ -25,7 +26,8 @@ module.exports = () => {
                 patterns: [
                     { from: "userApp/assets", to: "assets" },
                 ],
-            })
+            }),
+            new ESLintPlugin()
         ],
         output: {
             filename: 'js/[name].bundle.js'

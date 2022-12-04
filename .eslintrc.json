@@ -1,0 +1,19 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": ["airbnb", "prettier"],
+    "overrides": [],
+    "plugins": ["prettier"],
+    "rules": {
+        "prettier/prettier": ["error"],
+        "max-len": [1, 70, 2, { "ignoreComments": true} ]
+    },
+    "ignorePatterns": [
+        "**/webpack.*",
+        "**/buildtools/*", 
+        "tsconfig.*", 
+        "**/node_modules/*.js"
+    ]
+}
