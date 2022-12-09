@@ -42,3 +42,7 @@
   color: #2f5926;
   background-color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity));
 }
+
+.leaflet-map {
+  height: 380px;
+}

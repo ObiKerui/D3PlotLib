@@ -14,6 +14,10 @@ import BoxPlot from './components/BoxPlot'
 import DonutPlot from './components/DonutPlot'
 import HeatmapPlot from './components/HeatmapPlot'
 import HeartbeatPlot from './components/HeartbeatPlot'
+import BasicMap from './components/BasicMap'
+import HexbinMap from './components/HexbinMap'
+import DensityMap from './components/DensityMap'
+import LayerMap from './components/MapLayers'
 
 import './index.css'
 
@@ -40,6 +44,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <DonutPlot />
       <HeatmapPlot />
       <HeartbeatPlot />
+      <BasicMap />
+      <HexbinMap />
+      <DensityMap />
+      <LayerMap />
     </main>
     <footer>
       <p>footer matter</p>

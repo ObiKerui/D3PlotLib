@@ -1,0 +1,77 @@
+{
+    "data" : [
+        {
+            "name" : "Sunderland",
+            "type" : "region",
+            "region" : "England",            
+            "latlong" : [54.913891, -1.389950]
+        },
+        {
+            "name" : "Cambridge Road",
+            "type" : "property",
+            "region" : "Sunderland",
+            "postcode" : "SR3 2DQ",
+            "latlong" : [54.871319, -1.405077]
+        },
+        {
+            "name" : "Vicarage Close",
+            "type" : "property",
+            "region" : "Sunderland",
+            "postcode" : "SR3 1JF",
+            "latlong" : [54.873360, -1.411650]
+        },
+        {
+            "name" : "Broadmayne Avenue",
+            "type" : "property",
+            "region" : "Sunderland",            
+            "postcode" : "DH4 7FB",            
+            "latlong" : [ 54.869381, -1.484330 ]
+        },
+        {
+            "name" : "Barnwell View",
+            "type" : "property",
+            "region" : "Sunderland",            
+            "postcode" : "DH4 7FB",            
+            "latlong" : [ 54.896788, -1.425265 ]
+        },
+        {
+            "name" : "London",
+            "type" : "region",
+            "region" : "England",
+            "latlong" : [51.517220, -0.317590]
+        },
+        {
+            "name" : "London",
+            "type" : "property",
+            "region" : "London",
+            "postcode" : "L1 2DQ",            
+            "latlong" : [51.517220, -0.317590]
+        },
+        {
+            "name" : "Newcastle",
+            "type" : "region",
+            "region" : "England",
+            "latlong" : [54.968510, -1.620010]
+        },
+        {
+            "name" : "Elford Avenue",
+            "type" : "property",
+            "region" : "Newcastle",
+            "postcode" : "NE13 9AP",            
+            "latlong" : [ 55.022480, -1.655910 ]
+        },
+        {
+            "name" : "Billingham",
+            "type" : "region",
+            "region" : "England",
+            "latlong" : [54.68590971881204, -1.23456023453829]
+        },
+        {
+            "name" : "Billingham",
+            "type" : "property",
+            "region" : "Billingham",
+            "postcode" : "BH1 2DQ",
+            "latlong" : [ 54.68590971881204, -1.23456023453829]
+        }
+    ]
+}
