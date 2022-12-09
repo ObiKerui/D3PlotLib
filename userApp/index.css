@@ -13,7 +13,6 @@ body {
     --saturation: 60%;
     --level: 90%;
     --opacity: 50%;  
-    background-color: #fff;
     font-family: Helvetica, Arial, sans-serif;
     background-color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity));
 }
