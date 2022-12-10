@@ -19,6 +19,7 @@ jobs:
       
       - name: Install
         run: |
+          npm ci
           npm run build
 
       - name: Deploy
