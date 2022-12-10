@@ -18,7 +18,7 @@ const webpackConfig = (config) => {
             filename: 'js/[name].bundle.js',
             path: outputDir,
             clean: true,
-            publicPath: '/',
+            // publicPath: '/',
             libraryTarget: 'umd',
             library: '[name]',
             devtoolModuleFilenameTemplate: info =>
