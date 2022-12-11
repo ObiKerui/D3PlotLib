@@ -1,3 +1,7 @@
+
+.codeblock--content {
+    font-size: 0.6rem;
+}
 .plot {
   --hue: 15;
   --saturation: 60%;
@@ -41,6 +45,8 @@
   --level: 100%;
   color: #2f5926;
   background-color: hsla(var(--hue), var(--saturation), var(--level), var(--opacity));
+  height: 500px;
+  overflow: auto;
 }
 
 .leaflet-map {
