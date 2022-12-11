@@ -2,5 +2,13 @@
 {
     "presets": [
       "@babel/preset-react"
-    ]
+    ],
+    "plugins": [
+      ["prismjs", {
+          "languages": ["javascript", "css", "markup"],
+          "plugins": ["line-numbers"],
+          "theme": "okaidia",
+          "css": true
+      }]
+    ]    
 }

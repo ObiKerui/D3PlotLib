@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import ScatterPlot from './components/ScatterPlot'
+import ScatterPlot from './components/ScatterPlot/ScatterPlot'
 import BarPlot from './components/BarPlot'
 import LinePlot from './components/LinePlot'
 import DynamicLinePlot from './components/DynamicLinePlot'

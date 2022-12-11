@@ -1,10 +1,12 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 declare const d3: any
 declare const d3PlotLib: any
 
-import useCreatePlot from './UseCreatePlot'
+import useCreatePlot from '../UseCreatePlot'
+import CodeBlock from '../CodeBlock'
+import content from './create'
 
-import './plot.css'
+import '../plot.css'
 
 let np = {
   linspace(from: number, stop: number, len: number) {
@@ -119,9 +121,7 @@ export default function () {
         </div>
       </div>
       <div className="plot plot--code">
-        <code>
-          how to paste in the code here?          
-        </code>
+        <CodeBlock content={content}/>
       </div>
     </div>
   )
