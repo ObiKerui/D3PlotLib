@@ -5,15 +5,18 @@ import './codeblock.css'
 
 export default function ({ content }: any) {
   let language = 'javascript'
-  let code = ``
 
   useEffect(() => {
     Prism.highlightAll();
   }, []);  
 
+  const style = {
+    fontSize: '0.6rem'
+  }
+
   return (
     <pre>
-      <code className={`language-${language}`}>{content}</code>
+      <code className={`language-${language}`} style={style}>{content}</code>
     </pre>
   )
 }

@@ -20,16 +20,19 @@ import DensityMap from './components/DensityMap'
 import LayerMap from './components/MapLayers'
 
 import './index.css'
+import './prism.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <header>
-      <h1>D3PlotLib</h1>
-    </header>
     <aside>
       <h2>Side bar</h2>
+      <p>side menu items</p>
+      <li><ul>hello</ul></li>
     </aside>
     <main>
+      <header>
+        <h1>D3PlotLib</h1>
+      </header>
       <ScatterPlot />
       <LinePlot />
       <DynamicLinePlot />
