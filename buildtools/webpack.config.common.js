@@ -38,8 +38,13 @@ const webpackConfig = (config) => {
                     loader: 'babel-loader',
                     exclude: /node_modules/
                 },
+                // {
+                //     test: /\.(geojson|json)$/,
+                //     loader: 'json-loader',
+                //     exclude: /node_modules/
+                // },
                 {
-                    test: /\.(geojson|json)$/,
+                    test: /\.(geojson)$/,
                     loader: 'json-loader',
                     exclude: /node_modules/
                 },

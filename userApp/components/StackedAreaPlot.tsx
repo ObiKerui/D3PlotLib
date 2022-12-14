@@ -63,7 +63,7 @@ function createStackedArea(ref: any) {
     return (
       <div className="plot">
         <div className="plot plot--container">
-          <h3>Stacked Area Plot</h3>
+          <h3 id="stacked-area-plot">Stacked Area Plot</h3>
           <div className="plot plot--area" ref={ref}></div>
           <div className="plot plot--description">
             <p>

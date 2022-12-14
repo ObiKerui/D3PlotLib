@@ -135,7 +135,7 @@ async function createHeartbeatPlot(ref: any) {
     return (
       <div className='plot'>
         <div className="plot plot--container">
-          <h3>Heartbeat</h3>
+          <h3 id="animated-ecg-plot">Heartbeat</h3>
           <div className="plot--controls">
           <button className="btn btn-primary" onClick={() => handleClick()}>
             {buttonText}

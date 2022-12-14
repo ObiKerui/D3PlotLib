@@ -17,6 +17,7 @@ export default function ({ content }: any) {
   return (
     <pre>
       <code className={`language-${language}`} style={style}>{content}</code>
+      {/* <code className={`language-${language}`} style={style} data-src="js/d3PlotLib.bundle.js"/> */}
     </pre>
   )
 }

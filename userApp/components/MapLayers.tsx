@@ -50,7 +50,7 @@ export default function () {
   return (
     <div className='plot'>
       <div className="plot plot--container">
-        <h3>Election Map</h3>
+        <h3 id="leaflet-map">Election Map</h3>
         <div className="plot plot--area leaflet-map" ref={ref}></div>
         <div className="plot plot--description">
           <p>Election map is for rendering such n such. Good for which types of visual, bad for these others..etc.</p>

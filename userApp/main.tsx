@@ -18,6 +18,7 @@ import BasicMap from './components/BasicMap'
 import HexbinMap from './components/HexbinMap'
 import DensityMap from './components/DensityMap'
 import LayerMap from './components/MapLayers'
+import Sidebar from './components/Sidebar'
 
 import './index.css'
 import './prism.css'
@@ -25,9 +26,7 @@ import './prism.css'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <aside>
-      <h2>Side bar</h2>
-      <p>side menu items</p>
-      <li><ul>hello</ul></li>
+      <Sidebar />
     </aside>
     <main>
       <header>

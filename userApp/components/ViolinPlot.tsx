@@ -74,7 +74,7 @@ async function createViolinPlot(ref: any) {
     return (
       <div className="plot">
         <div className="plot plot--container">
-          <h3>Violin Plot</h3>
+          <h3 id="violin-plot">Violin Plot</h3>
           <div className="plot plot--area" ref={ref}></div>
           <div className="plot plot--description">
             <p>

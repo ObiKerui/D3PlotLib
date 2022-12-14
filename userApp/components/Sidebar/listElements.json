@@ -1,0 +1,22 @@
+{
+    "elements" : [
+        { "scatter-plot" : "Scatter Plot" },
+        { "line-plot" : "Line Plot" },
+        { "dynamic-line-plot" : "Dynamic Line Plot" },
+        { "bar-plot" : "Bar Plot" },
+        { "grouped-bar-plot" : "Grouped Bar Plot" },
+        { "histogram-plot" : "Histogram Plot" },
+        { "candlestick-plot" : "Candlestick Plot" },
+        { "stacked-bar-plot" : "Stacked Bar Plot" },                        
+        { "stacked-area-plot" : "Stacked Area Plot" },
+        { "violin-plot" : "Violin Plot" },
+        { "box-plot" : "Box Plot" },
+        { "donut-plot" : "Donut Plot" },
+        { "heatmap-plot" : "Heatmap Plot" },
+        { "animated-ecg-plot" : "Animated (ECG) Plot" },
+        { "basic-map" : "Basic Map" },
+        { "hexbin-map" : "Hexbin Map" },
+        { "density-map" : "Density Map" },
+        { "leaflet-map" : "Leaflet Map" }                    
+    ]
+}

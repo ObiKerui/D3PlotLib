@@ -51,7 +51,7 @@ export default function () {
   return (
     <div className='plot'>
       <div className="plot plot--container">
-        <h3>Bar Plot</h3>
+        <h3 id="bar-plot">Bar Plot</h3>
         <div className="plot plot--area" ref={ref}></div>
         <div className="plot plot--description">
           <p>Bar plot is for rendering such n such. Good for which types of visual, bad for these others..etc.</p>

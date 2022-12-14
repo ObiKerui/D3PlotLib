@@ -73,7 +73,7 @@ export default function () {
   return (
     <div className='plot'>
       <div className="plot plot--container">
-        <h3>Dynamic Line Plot</h3>
+        <h3 id="dynamic-line-plot">Dynamic Line Plot</h3>
         <div className="plot--controls">
           <button className="btn btn-primary" onClick={() => updatePlot()}>
             Update Me!

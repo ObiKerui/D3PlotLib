@@ -1,0 +1,17 @@
+
+.sidebar {
+    overflow: auto;
+}
+
+.sidebar--list {
+    list-style: none;
+}
+
+.sidebar--element {
+    margin-top: 0.2em;    
+}
+
+.sidebar--element a {
+    color: hsla(200, 40%, 20%, 90%);
+    font-size: 1rem;
+}
