@@ -195,6 +195,7 @@ export default function() {
       })
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle") 
+      .style("font-size", ".8em")
   }    
 
   let callable_obj : any = plot
