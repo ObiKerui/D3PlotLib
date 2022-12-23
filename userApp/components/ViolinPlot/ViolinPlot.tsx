@@ -1,50 +1,55 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react'
-import useCreatePlot from './UseCreatePlot'
+import CodeBlock from '../CodeBlock'
+import useCreatePlot from '../UseCreatePlot'
+import content from './create'
 
 declare const d3: any
 declare const d3PlotLib: any
 
-async function createDonutPlot(ref: any): Promise<any> {
+
+async function createViolinPlot(ref: any) {
 
     let csvresult = await d3.csv('assets/iris.csv')
   
     let labels = Object.keys(csvresult[0])
     labels = labels.slice(0, -1)
-    let obj: any = labels.reduce((accumulator, value) => {
+  
+    // create an empty array for each label 
+    let arrays: any = labels.reduce((accumulator, value) => {
       return {...accumulator, [value]: []}
     }, {})
   
     csvresult.forEach((elem: any) => {
       labels.forEach((e: any) => { 
-          obj[e as keyof any].push(+(elem[e]))
+        arrays[e as keyof any].push(+(elem[e]))
       })
       return elem
     })
   
-    let ys = Object.values(obj)
+    let ys = Object.values(arrays)
   
-    // sum the values 
-    let sums = ys.map((y: any) => {
-      return d3.sum(y)
-    })
+    let scaler = d3PlotLib.Scaler()
+      .xScale((xs: any) => {
+        return d3
+          .scaleBand()
+          .domain(labels)
+          .paddingInner(0.1)
+          .paddingOuter(0.1)
+      })
+      .yScale((ys: any) => {
+        return d3.scaleLinear().domain([-10, 10])
+      })
   
-    // get total
-    let total = sums.reduce((accumulator, value) => {
-      return accumulator + value
-    }, 0)
-  
-    let percentages = sums.map((y: any) => {
-      return y / total
-    })
-  
-    // console.log('labels / ys / sums / total / percentages ', labels, ys, sums, total, percentages)
-  
-    let donutPlot = d3PlotLib.DonutPlot()
-    .ys(percentages)
+    let boxplot = d3PlotLib.ViolinPlot()
+    .ys(ys)
     .labels(labels)
   
-    let container = d3PlotLib.Container()
-    .plot(donutPlot)
+    let container = d3PlotLib
+      .Container()
+      .xAxisLabel('X Axis')
+      .yAxisLabel('Y Axis')
+      .scale(scaler)
+      .plot(boxplot)
   
     d3.select(ref).call(container)
   
@@ -57,26 +62,25 @@ async function createDonutPlot(ref: any): Promise<any> {
   
     useCreatePlot(async () => {
       const currRef = ref.current
-      let obj = await createDonutPlot(currRef)
+      let obj = await createViolinPlot(currRef)
       plotObj = obj
     })
   
     return (
       <div className="plot">
         <div className="plot plot--container">
-          <h3 id="donut-plot">Donut Plot</h3>
+          <h3 id="violin-plot">Violin Plot</h3>
           <div className="plot plot--area" ref={ref}></div>
           <div className="plot plot--description">
             <p>
-              Donut plot is for rendering such n such. Good for which types of visual, bad for
+              Violin plot is for rendering such n such. Good for which types of visual, bad for
               these others..etc.
             </p>
           </div>
         </div>
         <div className="plot plot--code">
-          <code>how to paste in the code here?</code>
+          <CodeBlock content={content}/>
         </div>
       </div>
     )
-  }
-  
+  }  
