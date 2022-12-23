@@ -1,13 +1,13 @@
 import React, { useRef, useLayoutEffect, useEffect } from 'react'
-import useCreatePlot from './UseCreatePlot'
+import useCreatePlot from '../UseCreatePlot'
 declare const d3: any
 declare const d3PlotLib: any
 
 async function createBarPlot(ref: HTMLDivElement) {
-  let xs = [1, 2, 4]
-  let ys1 = [4, 5, 6]
-  let ys2 = [2, 3, 1]
-  let ys3 = [5, 7, 7]
+  let xs = [1, 2, 3, 4, 5, 6, 7, 8]
+  let bars = [4, 5, 6, 6, 6, 7, 8, 9]
+  let baseline = [2, 2, 2, 2, 3, 3, 3, 3]
+  let target = [5, 6, 6, 6, 6, 7, 8, 9]
 
   let scaler = d3PlotLib
     .Scaler()
@@ -16,12 +16,12 @@ async function createBarPlot(ref: HTMLDivElement) {
     })
     .yScale((ys: any) => {
       let merged = [].concat.apply([], ys)
-      return d3.scaleLinear().domain(d3.extent(merged))
+      return d3.scaleLinear().domain([0, d3.extent(merged)[1] + 1])
     })
 
-  let hist = d3PlotLib.BarPlot().xs(xs).alpha([0.4]).ys(ys1).labels(['text'])
+  let hist = d3PlotLib.BarPlot().xs(xs).alpha([0.4]).ys(bars).labels(['Profit/Loss'])
 
-  let plots = d3PlotLib.Plot().xs(xs).ys([ys1, ys2, ys3]).labels(['Norm', 'LogNorm', 'SkewNorm'])
+  let plots = d3PlotLib.Plot().xs(xs).ys([baseline, target]).labels(['Baseline', 'Target'])
 
   let legend = d3PlotLib.Legend()
 

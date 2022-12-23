@@ -1,6 +1,8 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react'
-import np from './NumpyClone'
-import useCreatePlot from './UseCreatePlot'
+import CodeBlock from '../CodeBlock'
+import np from '../NumpyClone'
+import useCreatePlot from '../UseCreatePlot'
+import content from './create'
 
 declare const d3: any
 declare const d3PlotLib: any
@@ -87,7 +89,7 @@ export default function () {
         </div>
       </div>
       <div className="plot plot--code">
-        <code>how to paste in the code here?</code>
+        <CodeBlock content={content}/>
       </div>
     </div>
   )

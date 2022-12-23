@@ -1,6 +1,8 @@
 import React, { useRef, useLayoutEffect, useEffect, useState } from 'react'
-import HeatmapPlot from './HeatmapPlot'
-import useCreatePlot from './UseCreatePlot'
+import CodeBlock from '../CodeBlock'
+import HeatmapPlot from '../HeatmapPlot/HeatmapPlot'
+import useCreatePlot from '../UseCreatePlot'
+import content from './create'
 declare const d3: any
 declare const d3PlotLib: any
 
@@ -149,7 +151,7 @@ async function createHeartbeatPlot(ref: any) {
         </div>
         <div className="plot plot--code">
           <code>
-            how to paste in the code here?          
+            <CodeBlock content={content}/>
           </code>
         </div>
       </div>
