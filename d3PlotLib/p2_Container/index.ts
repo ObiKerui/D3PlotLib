@@ -31,9 +31,6 @@ export default function () {
   );
 
   function toExport(html_selection: any) {
-    if (obj.showMargins) {
-      obj.svg.style("background-color", "rgba(255, 0, 0, .2)")
-    }
 
     obj.chartWidth = obj.width - obj.margin.left - obj.margin.right;
     obj.chartHeight = obj.height - obj.margin.top - obj.margin.bottom;
@@ -55,6 +52,11 @@ export default function () {
     drawAxisLabels()
 
     drawLegends() 
+
+    if (obj.showMargins && obj.svg) {
+      obj.svg.style("background-color", "rgba(255, 0, 0, .2)")
+    }
+
   }
 
   function buildScales() {

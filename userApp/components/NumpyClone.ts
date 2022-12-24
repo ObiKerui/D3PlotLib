@@ -6,6 +6,15 @@ export default {
       let arr = d3.range(from, stop, multiplier)
       return arr
     },
+
+    noise(from: number, stop: number, len: number) {
+      let multiplier = (stop - from) / len
+      let arr = d3.range(from, stop, multiplier)
+      let noisy = arr.map((elem: number) => {
+        return d3.randomUniform(elem - .05, elem + .05)()
+      })      
+      return noisy
+    },
   
     mean(arr: any) {
       return d3.mean(arr)

@@ -52,6 +52,7 @@ function createLinePlot(ref: HTMLDivElement) {
 
   let container = d3PlotLib
     .Container()
+    .showMargins(true)
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
     .scale(scaler)

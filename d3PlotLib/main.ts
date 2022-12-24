@@ -30,6 +30,7 @@ import p2_devGenericMapMarkers from './p2_devGenericMapMarkers'
 import p2_devHexBinLayer from './p2_devHexBinLayer'
 import p2_devZoom from './p2_devZoom'
 import p2_devLabels from './p2_devLabels'
+import p2_Brush from './p2_Brush'
 
 export {
     // phase 2
@@ -67,4 +68,5 @@ export {
 
     p2_devZoom as DevZoom,
     p2_devLabels as DevLabels,    
+    p2_Brush as DevBrush
 }

@@ -49,7 +49,9 @@ export default function () {
 
     // set the colour etc
     let index = (obj.index % colorScheme.length)
-    obj.colours = colorScheme
+    
+    obj.colours = obj.colours.length === 0 ? colorScheme : obj.colours
+    // obj.colours = colorScheme
   }
 
   function prepareData() {
@@ -94,6 +96,8 @@ export default function () {
     let svg = _container.svg
 
     let chartGroup = svg.select(`.${obj.plotID}`)
+
+    console.log('what are the plot ys: ', ys)
 
     // select all rect in svg.chart-group with the class bar
     let lines = chartGroup
