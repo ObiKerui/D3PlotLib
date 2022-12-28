@@ -11,8 +11,6 @@ async function createGroupedBarPlot(ref: HTMLElement) {
 
     let labels = csvdata.columns
     let subgroups = ['banana', 'poacee', 'sorgho']
-
-    console.log('csvdata / labels: ', csvdata, labels, csvdata.columns)
   
     let groups = d3.map(csvdata, (d: any) => { 
       return(d.group)

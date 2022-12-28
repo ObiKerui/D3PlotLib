@@ -1,5 +1,7 @@
 // p2_Brush/index.ts
 'use strict'
+import React from 'react';
+import { plotAttrs } from '../ChartAttribs';
 
 declare const d3: any
 declare const moment: any
@@ -7,7 +9,9 @@ declare const L: any
 declare const $: any
 
 export default function () {
-    let obj: any = {}
+
+  let obj: any = JSON.parse(JSON.stringify(plotAttrs))
+  let _container: any = null
     let zoomDetails: any = null
 
     //initialize throttlePause variable outside throttle function
@@ -28,42 +32,134 @@ export default function () {
         }, time)
     }  
 
-  function toExport(containerAttrs: any, plottables: any) {
+    function plot(container: any) {
+      _container = container
+      buildContainerGroups()
+      drawData()
+    }
+  
+    function buildContainerGroups() {
+      let svg = _container.svg
 
-    let mapWidth = containerAttrs.mapWidth
-    let mapHeight = containerAttrs.mapHeight
-    // let mapGroup = containerAttrs.svg.select("g.map-group")
-    // let metaGroup = containerAttrs.svg.select("g.metadata-group")
+      let metadataGroup = svg.select("g.metadata-group")
+      let children = metadataGroup.selectAll(function() { 
+        return this.childNodes 
+      })
+  
+      let existingElement = children.filter(`g.${obj.legendID}`)
+      if(existingElement.size()) {
+        return
+      }
+      
+      obj.index = children.size()
+      obj.legendID = `brush-${obj.index}`
+  
+      let legend_id = metadataGroup.append("g").classed(`${obj.legendID}`, true)
+      let legend_id_ap = legend_id.append("g").classed("anchorpoint", true)
+      legend_id_ap.append("rect").classed("background", true)
+      legend_id_ap.append("g").classed("innermargin", true)            
+    }
 
-    // let zoomDetails = metaGroup.select("g.zoom-details")
-    // console.log('what are zoom details: ', zoomDetails)
+    function drawData() {
+      let svg = _container.svg
+      let metadataGroup = svg.select(`.${obj.legendID}`)
+      let anchorPoint = metadataGroup.select("g.anchorpoint")    
+      let rectBackground = anchorPoint.select("rect.background")
+      let innerMargin = anchorPoint.select("g.innermargin")
 
-    // if(zoomDetails === null) {
-    //     function handleZoom(a: any, b: any, e: any) {
-    //         let transform = d3.event.transform
-    //         throttle(() => {
-    //             // console.log('what is transform: ', transform)
-    //             mapGroup.attr('transform', transform)      
-    //         }, 10)
-    //     }
+      // let position = obj.position ?? "topleft"
+      let chartHeight = _container.chartHeight
+      let xScale = _container.xScale
+      let onChange = obj.onChange
 
-    //     let zoom = d3.zoom()
-    //     .on('zoom', handleZoom)
-    //     .scaleExtent([1, 5])
-    //     .translateExtent([[0, 0], [mapWidth, mapHeight]])
+      let margin = 0
+  
+      let isInsideBrush = false
+      let isMouseDown = false
+      let xDragOffset = 0
+  
+      innerMargin.attr("transform", `translate(${margin},${margin})`)
+  
+      // width and height need to be set better - should focus on an area of data
+      rectBackground
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 100)
+      .attr("height", chartHeight)
+      .style("fill", "white")
+      .style("stroke", "blue")
+      .style("opacity", 0.45)
+      .on('mousemove', function(d: any, i: number, node: any) {
+        let rect = d3.select(node[i])
+        rect.style('cursor', 'grab')
 
-    //     console.log('what is map group here: ', mapGroup)
-    //     mapGroup.call(zoom)    
+        if(isMouseDown && isInsideBrush) {
 
-    //     console.log('zoom params: ', containerAttrs, plottables, mapGroup)
-    //     metaGroup.append("g")
-    //     .classed("zoom-details", true)
+          const mousePosition = d3.mouse(node[i])
+          const posOnChartX = xScale.invert(mousePosition[0])
+          const x = xScale.invert(rect.attr("x"))
+          const rectX = +(rect.attr("x"))
+          const rectWidth = +(rect.attr("width"))
 
-    //     zoomDetails = {}
-    // }
-  }
+          let newXvalue = xScale(posOnChartX) - xDragOffset
 
-  let callableObj: any = toExport
+          // get min/max domain bounds 
+          let minX = xScale.domain()[0]
+          let maxX = xScale.domain()[1]
+
+          // check for values outside bounds of domain
+          let lessThanXLimit = newXvalue < xScale(minX)
+          let greaterThanXLimit = +(newXvalue + rectWidth) > xScale(maxX)
+
+          // correct if necessary
+          newXvalue = lessThanXLimit ? rectX : newXvalue
+          newXvalue = greaterThanXLimit ? rectX : newXvalue
+
+          // set the rect x attr
+          rect.attr("x", newXvalue)
+
+          if(!lessThanXLimit && !greaterThanXLimit) {
+            let minDomain = xScale.invert(newXvalue)
+            let rectWidth = +(rect.attr("width"))
+            let maxDomain = xScale.invert(newXvalue + rectWidth)
+            let newDomain = [minDomain, maxDomain]
+            let newScaleX = xScale.copy()
+            newScaleX.domain(newDomain)
+            onChange(newScaleX)
+          }
+        }
+      })
+      .on('mouseenter', function(d: any, i: number, node: any) {
+        isInsideBrush = true
+      })
+      .on('mouseleave', function(d: any, i: number, node: any) {
+        isInsideBrush = false
+        isMouseDown = false
+      })
+      .on('mousedown', function(d: any, i: number, node: any) {
+        isMouseDown = true
+        let rect = d3.select(node[i])
+        let xPos = rect.attr("x")
+        let mousePosition = d3.mouse(node[i])
+        let xPosOnChart = xScale.invert(mousePosition[0])
+        
+        xDragOffset = Math.abs(xPos - xScale(xPosOnChart))
+
+      })
+      .on('mouseup', function(d: any, i: number, node: any) {
+        isMouseDown = false
+      })
+
+      let minDomain = xScale.invert(0)
+      let rectWidth = +(rectBackground.attr("width"))
+      let maxDomain = xScale.invert(0 + rectWidth)
+      let newDomain = [minDomain, maxDomain]
+      let newScaleX = xScale.copy()
+      newScaleX.domain(newDomain)
+      onChange(newScaleX)
+}
+
+  let callableObj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -86,6 +182,14 @@ export default function () {
 
   callableObj.attr = function () {
     return obj
+  }
+
+  callableObj.onChange = function(_x: any) {
+    if(arguments.length) {
+      obj.onChange = _x
+      return callableObj
+    }
+    return obj.onChange
   }
 
   return callableObj

@@ -23,50 +23,55 @@ function getDates(startDate: any, stopDate: any) {
 
 let xs = getDates('2020-01-01', '2020-12-31')
 let ys = NumpyClone.noise(0, .5, xs.length)
+let ys2 = NumpyClone.noise(.5, .6, xs.length)
+
+let vLine = d3PlotLib.AxLine()
+.xs([xs[15], xs[20], xs[23], xs[30]])
+.labels('Cut Off')
+.alpha(0.5).styles('--')
 
 async function createPrimaryLinePlot(ref: HTMLDivElement) {
-
-  let windowXs = xs.slice(60, 90)
-  let windowYs = ys.slice(60, 90)
-
   let scaler = d3PlotLib
     .Scaler()
     .xScale((xs: any) => {
       return d3.scaleTime().domain(d3.extent(xs))
     })
     .yScale((localYs: any) => {
-      return d3.scaleLinear().domain(d3.extent(ys))
+      return d3.scaleLinear().domain([d3.extent(ys)[0], 1])
     })
 
   let plot1 = d3PlotLib.Plot()
-  .xs(windowXs)
-  .ys([windowYs])
+  .xs(xs)
+  .ys(ys)
   .tag('plot1')
   .labels('Norm')
 
-  // let plot2 = d3PlotLib.Plot()
-  // .tag('plot2')
-  // .labels('SkewNorm')
+  let plot2 = d3PlotLib.Plot()
+  .xs(xs)
+  .ys(ys2)
+  .tag('plot2')
+  .labels('Skew')
 
   let container = d3PlotLib
-    .Container()
-    .margin({ left: 50, right: 20, top: 10, bottom: 40 })
-    .height(300)
-    .xAxisText({ rotation: 65 })  
-    .yAxisLabel('Y Axis')
-    .scale(scaler)
-    .plot(plot1)
-    // .plot(plot2)
-    .legend(d3PlotLib.Legend())
+  .Container()
+  .margin({ left: 50, right: 20, top: 10, bottom: 40 })
+  .height(300)
+  .xAxisText({ rotation: 65 })  
+  .yAxisLabel('Y Axis')
+  .scale(scaler)
+  .plot(plot1)
+  .plot(plot2)
+  .plot(vLine)
+  .legend(d3PlotLib.Legend())
 
   d3.select(ref).call(container)
 
   return container
 }
 
-async function createSecondaryLinePlot(ref: HTMLDivElement) {
-  let scaler = d3PlotLib
-    .Scaler()
+async function createSecondaryLinePlot(ref: HTMLDivElement, primaryPlot: any, primRef: any) {
+  
+  let scaler = d3PlotLib.Scaler()
     .xScale((xs: any) => {
       return d3.scaleTime().domain(d3.extent(xs))
     })
@@ -81,10 +86,25 @@ async function createSecondaryLinePlot(ref: HTMLDivElement) {
   let plot1 = d3PlotLib.Plot()
   .xs(xs)
   .ys(ys)
-  .tag('plot1').labels('Norm')
+  .tag('plot1')
+  .labels('Norm')
+
+  let plot2 = d3PlotLib.Plot()
+  .xs(xs)
+  .ys(ys2)
+  .tag('plot2')
+  .labels('Skew')
 
   let brush = d3PlotLib.DevBrush()
+  .onChange((newScale: any) => {
+    let scaler = primaryPlot.scale()
 
+    scaler.xScale((xs: any) => {
+      return d3.scaleTime().domain(newScale.domain())
+    })
+
+    primaryPlot(d3.select(primRef))
+  })
 
   // let plot2 = d3PlotLib.Plot().tag('plot2').labels('SkewNorm')
 
@@ -92,14 +112,14 @@ async function createSecondaryLinePlot(ref: HTMLDivElement) {
     .Container()
     .margin({ left: 50, right: 20, top: 10, bottom: 60 })
     .height(200)
-    // .showMargins(true)
     .xAxisLabel('X Axis')
     .xAxisText({ rotation: 65 })  
     .yAxisLabel('Y Axis')
     .scale(scaler)
     .plot(plot1)
-    // .plot(brush)
-    // .plot(plot2)
+    .plot(plot2)
+    .plot(vLine)
+    .legend(brush)
 
   d3.select(ref).call(container)
 
@@ -120,7 +140,7 @@ export default function () {
     primaryPlotObj = pObj
 
     const sCurrRef = sRef.current
-    let sObj = await createSecondaryLinePlot(sCurrRef)
+    let sObj = await createSecondaryLinePlot(sCurrRef, primaryPlotObj, pCurrRef)
     secondaryPlotObj = sObj
   })
 
