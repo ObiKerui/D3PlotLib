@@ -60,6 +60,10 @@ export default function () {
     let yScale = _container.yScale
     let chartHeight = _container.chartHeight
     let svg = _container.svg
+    let alpha = obj.alpha
+
+    // alpha is currently an array and somehow works 
+    // probably could be modified so the array length = data array length 
 
     let chartGroup = svg.select(`.${obj.plotID}`)
 
@@ -99,6 +103,7 @@ export default function () {
       .attr("fill", ({ value }: any) => {
         return "red"
       })
+      .style("opacity", alpha)
       .on("mouseover", function (d: any) {
         d3.select(this).style("cursor", "pointer")
         dispatcher.call("customMouseOver", this, d);

@@ -68,8 +68,6 @@ export default function () {
     let mapWidth = containerAttrs.mapWidth
     let mapHeight = containerAttrs.mapHeight
 
-    console.log('calculating projection width / height: ', mapWidth, mapHeight)
-
     // create a 2d array - each entry is an array of the y values
     // would not have to do this if plottable provides ys already in 2d array format...
     plottables.forEach((plottable: any) => {

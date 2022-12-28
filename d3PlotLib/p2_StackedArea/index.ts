@@ -112,8 +112,8 @@ export default function () {
     let stack = d3.stack().keys(labels).order(d3.stackOrderDescending)
     let stackedDataset = stack(data)
 
-    console.log('stacked area what is dataset: ', stackedDataset)
-    console.log('xscale domains: ', xScale.domain()[0], xScale.domain()[1])
+    // console.log('stacked area what is dataset: ', stackedDataset)
+    // console.log('xscale domains: ', xScale.domain()[0], xScale.domain()[1])
     // xScale.domain([1, 5])
     // yScale.domain([0, 100])
     // console.log('test the scales: ', xScale, xScale(1), xScale(2), xScale(5))

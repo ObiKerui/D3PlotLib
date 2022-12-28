@@ -19,9 +19,13 @@ async function createBarPlot(ref: HTMLDivElement) {
       return d3.scaleLinear().domain([0, d3.extent(merged)[1] + 1])
     })
 
-  let hist = d3PlotLib.BarPlot().xs(xs).alpha([0.4]).ys(bars).labels(['Profit/Loss'])
+  let hist = d3PlotLib.BarPlot().xs(xs).alpha([0.8]).ys(bars).labels(['Profit'])
 
-  let plots = d3PlotLib.Plot().xs(xs).ys([baseline, target]).labels(['Baseline', 'Target'])
+  let plots = d3PlotLib.Plot()
+  .xs(xs)
+  .ys([baseline, target])
+  .labels(['Baseline', 'Target'])
+  .colours(['blue', 'green'])
 
   let legend = d3PlotLib.Legend()
 

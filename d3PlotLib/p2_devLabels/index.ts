@@ -115,7 +115,7 @@ export default function () {
     //     return null
     //   })
       .text((d: any) => {
-        console.log('what is d: ', d)
+        // console.log('what is d: ', d)
         return d.name
       })
       .style("font-size", 12)

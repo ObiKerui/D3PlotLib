@@ -43,13 +43,25 @@ export default function () {
 
     obj.index = children.size()
     obj.plotID = `plot-${obj.index}`
-    chartGroup.append("g").classed(`${obj.plotID}`, true);
+    let plotGroup = chartGroup.append("g").classed(`${obj.plotID}`, true);
+
+    let containerWidth = _container.chartWidth
+    let containerHeight = _container.chartHeight
+    obj.clipPathId = `${obj.plotID}-clippath`
+
+    plotGroup.append("clipPath")
+      .attr("id", obj.clipPathId)
+      .append("rect")
+      .attr("width", containerWidth + 30)
+      .attr("height", containerHeight)
 
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
     let index = (obj.index % colorScheme.length)
-    obj.colours = colorScheme
+    
+    obj.colours = obj.colours.length === 0 ? colorScheme : obj.colours
+    // obj.colours = colorScheme
   }
 
   function prepareData() {
@@ -78,6 +90,8 @@ export default function () {
     let strokeColours = obj.colours
     let xScale = _container.xScale
     let yScale = _container.yScale
+    let containerWidth = _container.width
+    let containerHeight = _container.height
 
     // console.log('plot draw : obj / xs / ys / test xscale / test yscale ', obj, xs, ys, xScale(xs[0]), yScale(ys[0]))
 
@@ -128,6 +142,7 @@ export default function () {
         // console.log('d value / ys[i] / ys[i] with scale ', d, ys, yScale(d))
         return yScale(d)
       }))
+      .attr("clip-path", `url(#${obj.clipPathId})`)
       .attr("stroke", (d: any, i: number) => {
         // console.log('stroke colours / d / i ', strokeColours, d, i)
         return strokeColours[i]

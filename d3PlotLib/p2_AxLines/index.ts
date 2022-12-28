@@ -46,6 +46,16 @@ export default function () {
 
     chartGroup.append("g").classed(`${obj.lineID}`, true);
 
+    let containerWidth = _container.chartWidth
+    let containerHeight = _container.chartHeight
+    obj.clipPathId = `${obj.plotID}-clippath`
+
+    chartGroup.append("clipPath")
+      .attr("id", obj.clipPathId)
+      .append("rect")
+      .attr("width", containerWidth + 30)
+      .attr("height", containerHeight)
+
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
@@ -90,17 +100,15 @@ export default function () {
     // get start / end y value
     let yStart = yScale.domain()[0]
     let yEnd = yScale.domain()[1]
-    let xPoints = [xs, xs]
-    let yPoints = [yStart, yEnd]
+    let xPoints = xs
 
     // console.log('show yStart / yEnd / xs / ys / xPoints / ypoints: ', yStart, yEnd, xs, ys, xPoints, yPoints)
 
     let chartGroup = svg.select(`.${obj.lineID}`)
 
-    // select all rect in svg.chart-group with the class bar
     let lines = chartGroup
       .selectAll(".lines")
-      .data([xPoints])
+      .data(xPoints)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
     lines.exit()
@@ -110,7 +118,7 @@ export default function () {
     // Enter - add the shapes to this data point
     let enterGroup = lines
       .enter()
-      .append("path")
+      .append("line")
       .classed("lines", true)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -120,13 +128,19 @@ export default function () {
     lines = lines.merge(enterGroup)
 
     // now position and colour what exists on the dom
-    lines.attr("d", d3.line()
-      .x(function (d: any, i: any) {
-        return xScale(d)
-      })
-      .y(function (d: any, ith: number) {
-        return yScale(yPoints[ith])
-      }))
+    lines.attr("x1", function(d: any, i: any) {
+      return xScale(d)
+    })
+    .attr("x2", function(d: any, i: any) {
+      return xScale(d)
+    })
+    .attr("y1", function(d: any, i: any) {
+      return yScale(yStart)
+    })
+    .attr("y2", function(d: any, i: any) {
+      return yScale(yEnd)
+    })
+    .attr("clip-path", `url(#${obj.clipPathId})`)
       .attr("stroke", strokeColour)
       .style("opacity", alpha)
       .style(lineEffect, ("3, 3"))

@@ -3,8 +3,6 @@ import React, { useRef, useLayoutEffect, useEffect } from 'react'
 import json from './listElements.json'
 import './sidebar.css'
 
-console.log('json data: ', json.elements)
-
 export default function() {
     return (
         <>
