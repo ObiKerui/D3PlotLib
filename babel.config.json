@@ -1,7 +1,9 @@
 // babel.config.json
 {
     "presets": [
-      "@babel/preset-react"
+      "@babel/preset-env",
+      "@babel/preset-react",
+      "@babel/preset-typescript"
     ],
     "plugins": [
       ["prismjs", {

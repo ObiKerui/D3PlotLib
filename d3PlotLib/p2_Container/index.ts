@@ -3,15 +3,12 @@
 import { scaleAttrs, containerAttrs, axisAttrs } from '../ChartAttribs';
 
 declare const d3: any;
-declare const moment: any;
-declare const L: any;
-declare const $: any;
 
 const publicAttributes = {
   ...scaleAttrs,
   ...containerAttrs,
   ...axisAttrs
-}
+} as const
 
 export default function () {
 

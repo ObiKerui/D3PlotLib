@@ -4,6 +4,7 @@ import p2_Scales from './p2_Scales'
 import p2_Container from './p2_Container'
 import p2_Plot from './p2_Plot'
 import p2_AxLines from './p2_AxLines'
+import p2_AyLines from './p2_AyLines'
 import p2_BarPlot from './p2_BarPlot'
 import p2_GroupedBarPlot from './p2_GroupedBarPlot'
 import p2_Histogram from './p2_Histogram'
@@ -38,6 +39,7 @@ export {
     p2_Scales as Scaler,
     p2_Plot as Plot,
     p2_AxLines as AxLine,
+    p2_AyLines as AyLine,
     p2_BarPlot as BarPlot,
     p2_GroupedBarPlot as GroupedBarPlot,
     p2_Histogram as Hist,    
