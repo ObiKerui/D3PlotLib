@@ -6,8 +6,7 @@ declare const d3PlotLib: any
 async function createBarPlot(ref: HTMLDivElement) {
   let xs = [1, 2, 3, 4, 5, 6, 7, 8]
   let bars = [4, 5, 6, 6, 6, 7, 8, 9]
-  let baseline = [2, 2, 2, 2, 3, 3, 3, 3]
-  let target = [5, 6, 6, 6, 6, 7, 8, 9]
+  let yLineData = [2, 5]
 
   let scaler = d3PlotLib
     .Scaler()
@@ -21,11 +20,14 @@ async function createBarPlot(ref: HTMLDivElement) {
 
   let hist = d3PlotLib.BarPlot().xs(xs).alpha([0.8]).ys(bars).labels(['Profit'])
 
-  let plots = d3PlotLib.Plot()
-  .xs(xs)
-  .ys([baseline, target])
-  .labels(['Baseline', 'Target'])
-  .colours(['blue', 'green'])
+  // let plots = d3PlotLib.Plot()
+  // .xs(xs)
+  // .ys([baseline, target])
+  // .labels(['Baseline', 'Target'])
+  // .colours(['blue', 'green'])
+
+    let yLines = d3PlotLib.AyLine()
+    .ys(yLineData)
 
   let legend = d3PlotLib.Legend()
 
@@ -35,7 +37,7 @@ async function createBarPlot(ref: HTMLDivElement) {
     .yAxisLabel('Y Axis')
     .scale(scaler)
     .plot(hist)
-    .plot(plots)
+    .plot(yLines)
     .legend(legend)
 
   d3.select(ref).call(container)

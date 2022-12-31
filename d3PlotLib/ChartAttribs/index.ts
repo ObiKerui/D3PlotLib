@@ -24,12 +24,12 @@ export const containerAttrs = {
   showMargins: false as boolean,
   scale: null as any,
   legend: null as any
-}
+} as const
 
 export const scaleAttrs = {
   xScale : null as any, 
   yScale : null as any
-}
+} as const 
 
 export const axisAttrs = {
   xAxis: null as any,
@@ -61,7 +61,7 @@ export const axisAttrs = {
   yAxisText: {
     rotation: 0
   }
-}
+} as const 
 
 export const plotAttrs = {
   tag: null as string,
@@ -74,7 +74,7 @@ export const plotAttrs = {
   styles: [] as any,
   colours: [] as any,
   curve: null as any
-}
+} as const
 
 export const barsAttrs = {
   tag: null as string,

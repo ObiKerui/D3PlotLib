@@ -1,12 +1,8 @@
 // BarChart/index.ts
 "use strict";
+import * as d3 from 'd3'
 import { plotAttrs, barsAttrs } from '../ChartAttribs';
 import * as scaler from '../p2_Scales';
-
-declare const d3: any;
-declare const moment: any;
-declare const L: any;
-declare const $: any;
 
 const publicAttrs = {
   ...plotAttrs,
@@ -28,7 +24,7 @@ export default function () {
     "customMouseClick"
   );
 
-  function plot(container: any) {
+  function plot(container: unknown) {
     _container = container
     buildContainerGroups()
     drawData()
@@ -88,15 +84,15 @@ export default function () {
 
     // now position and colour what exists on the dom
     bars
-      .attr("x", (x: any) => {
+      .attr("x", (x: unknown) => {
         return xScale(x)
       })
-      .attr("y", (x: any, idx: number) => {
+      .attr("y", (x: unknown, idx: number) => {
         let yValue = yScale(ys[idx])
         return yValue
       })
       .attr("width", xScale.bandwidth())
-      .attr("height", (x: any, idx: number) => {
+      .attr("height", (x: unknown, idx: number) => {
         let height = (chartHeight - yScale(ys[idx]))
         return height
       })
@@ -104,25 +100,25 @@ export default function () {
         return "red"
       })
       .style("opacity", alpha)
-      .on("mouseover", function (d: any) {
+      .on("mouseover", function (d: unknown) {
         d3.select(this).style("cursor", "pointer")
         dispatcher.call("customMouseOver", this, d);
       })
-      .on("mousemove", function (d: any) {
+      .on("mousemove", function (d: unknown) {
         d3.select(this).style("cursor", "pointer")
         dispatcher.call("customMouseMove", this, d);
       })
-      .on("mouseout", function (d: any) {
+      .on("mouseout", function (d: unknown) {
         dispatcher.call("customMouseOut", this, d);
       })
-      .on("click", function (d: any) {
+      .on("click", function (d: unknown) {
         dispatcher.call("customMouseClick", this, d);
       });
   }
 
   let callable_obj: any = plot
 
-  callable_obj.on = function (_x: any) {
+  callable_obj.on = function (_x: unknown) {
     let value = dispatcher.on.apply(dispatcher, arguments);
     return value === dispatcher ? callable_obj : value;
   }
@@ -135,7 +131,7 @@ export default function () {
    */
 
   function generateAccessor(attr: any) {
-    function accessor(value: any) {
+    function accessor(value: unknown) {
       if (!arguments.length) {
         return obj[attr]
       }

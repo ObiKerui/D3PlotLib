@@ -1,11 +1,12 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest/globals": true
     },
-    "extends": ["airbnb", "prettier"],
+    "extends": ["airbnb", "prettier", "plugin:jest/recommended"],
     "overrides": [],
-    "plugins": ["prettier"],
+    "plugins": ["prettier", "jest"],
     "rules": {
         "prettier/prettier": ["error"],
         "max-len": [1, 70, 2, { "ignoreComments": true} ]
