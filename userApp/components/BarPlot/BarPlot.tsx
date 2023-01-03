@@ -45,7 +45,7 @@ async function createBarPlot(ref: HTMLDivElement) {
 }
 
 export default function () {
-  let ref = useRef(null)
+  let ref = useRef<HTMLDivElement | null>(null)
   let plotObj: any = null
 
   useCreatePlot(async () => {

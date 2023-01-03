@@ -19,6 +19,6 @@
         "userApp/**/*", "D3PlotLib/**/*", "types/**/*"
     ],
     "exclude": [
-        "buildtools/**/*"
+        "buildtools/**/*", "./node_modules"
     ]
 }
