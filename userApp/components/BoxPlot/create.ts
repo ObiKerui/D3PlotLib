@@ -1,4 +1,3 @@
-
 export default `
 // d3 reads in csv data as an array of json
 let csvresult = await d3.csv('assets/iris.csv')
