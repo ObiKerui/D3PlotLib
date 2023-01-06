@@ -6,7 +6,7 @@ import CodeBlock from '../CodeBlock'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
-async function createBoxPlot(ref: any) {
+async function createBoxPlot(ref: HTMLDivElement) {
   // d3 reads in csv data as an array of json
   const csvresult: object[] = await d3.csv('assets/iris.csv')
 
@@ -44,7 +44,7 @@ async function createBoxPlot(ref: any) {
 }
 
 export default function () {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement | null>(null)
 
   useCreatePlot(async () => {
     const currRef = ref.current

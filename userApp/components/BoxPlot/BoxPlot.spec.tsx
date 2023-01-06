@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react'
 import React from 'react'
-import BarPlot from './BarPlot'
+import BoxPlot from './BoxPlot'
 
 describe('BarPlot tests', () => {
   it('should render on page', () => {
-    const { container } = render(<BarPlot />)
+    const { container } = render(<BoxPlot />)
 
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
     // console.log(svgEl.classList.toString())

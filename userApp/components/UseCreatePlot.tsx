@@ -1,7 +1,7 @@
-import React, { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 export default function (creatorFtn: any) {
-  let plotCreated = useRef(false)
+  const plotCreated = useRef(false)
   useLayoutEffect(() => {
     if (plotCreated.current === false) {
       creatorFtn().catch(console.error)

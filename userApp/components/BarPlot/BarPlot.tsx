@@ -1,24 +1,30 @@
-import React, { useRef, useLayoutEffect, useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useRef } from 'react'
+import * as d3 from 'd3'
+import * as d3PlotLib from '../../../d3PlotLib/main'
 import useCreatePlot from '../UseCreatePlot'
-declare const d3: any
-declare const d3PlotLib: any
 
 async function createBarPlot(ref: HTMLDivElement) {
-  let xs = [1, 2, 3, 4, 5, 6, 7, 8]
-  let bars = [4, 5, 6, 6, 6, 7, 8, 9]
-  let yLineData = [2, 5]
+  const xs = [1, 2, 3, 4, 5, 6, 7, 8]
+  const bars = [4, 5, 6, 6, 6, 7, 8, 9]
+  const yLineData = [2, 5]
 
-  let scaler = d3PlotLib
+  const scaler = d3PlotLib
     .Scaler()
-    .xScale((xs: any) => {
-      return d3.scaleBand().domain(xs).padding(0.1)
-    })
+    .xScale((xss: any) => d3.scaleBand().domain(xss).padding(0.1))
     .yScale((ys: any) => {
-      let merged = [].concat.apply([], ys)
-      return d3.scaleLinear().domain([0, d3.extent(merged)[1] + 1])
+      // eslint-disable-next-line prefer-spread
+      const merged = [].concat.apply([], ys)
+      const extent = d3.extent(merged)
+      return d3.scaleLinear().domain([0, +extent[1] + 1])
     })
 
-  let hist = d3PlotLib.BarPlot().xs(xs).alpha([0.8]).ys(bars).labels(['Profit'])
+  const hist = d3PlotLib //
+    .BarPlot()
+    .xs(xs)
+    .alpha([0.8])
+    .ys(bars)
+    .labels(['Profit'])
 
   // let plots = d3PlotLib.Plot()
   // .xs(xs)
@@ -26,13 +32,11 @@ async function createBarPlot(ref: HTMLDivElement) {
   // .labels(['Baseline', 'Target'])
   // .colours(['blue', 'green'])
 
-    let yLines = d3PlotLib.AyLine()
-    .ys(yLineData)
+  const yLines = d3PlotLib.AyLine().ys(yLineData)
 
-  let legend = d3PlotLib.Legend()
+  const legend = d3PlotLib.Legend()
 
-  let container = d3PlotLib
-    .Container()
+  const container = (d3PlotLib.Container() as any)
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
     .scale(scaler)
@@ -45,20 +49,18 @@ async function createBarPlot(ref: HTMLDivElement) {
 }
 
 export default function () {
-  let ref = useRef<HTMLDivElement | null>(null)
-  let plotObj: any = null
+  const ref = useRef<HTMLDivElement | null>(null)
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    let obj = await createBarPlot(currRef)
-    plotObj = obj
+    await createBarPlot(currRef)
   })
 
   return (
     <div className="plot">
       <div className="plot plot--container">
         <h3 id="bar-plot">Bar Plot</h3>
-        <div className="plot plot--area" ref={ref}></div>
+        <div className="plot plot--area" ref={ref} />
         <div className="plot plot--description">
           <p>
             Bar plot is for rendering such n such. Good for which types of visual, bad for these
