@@ -1,29 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 import CodeBlock from '../CodeBlock'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
-async function createBoxPlot(ref: HTMLDivElement) {
-  // d3 reads in csv data as an array of json
-  const csvresult: object[] = await d3.csv('assets/iris.csv')
+async function createBoxPlot(ref: HTMLDivElement, csvresult: any) {
+  let ys: any[] = []
+  let labels: any[] = []
 
-  let labels = Object.keys(csvresult[0])
-  labels = labels.slice(0, -1)
+  if (csvresult.length > 0) {
+    labels = Object.keys(csvresult[0])
+    labels = labels.slice(0, -1)
 
-  // create an empty array for each label
-  const arrays: any = labels.reduce((accumulator, value) => ({ ...accumulator, [value]: [] }), {})
+    // create an empty array for each label
+    const arrays: any = labels.reduce((accumulator, value) => ({ ...accumulator, [value]: [] }), {})
 
-  csvresult.forEach((elem: object) => {
-    labels.forEach((e: string) => {
-      arrays[e as keyof object].push(+elem[e as keyof typeof elem])
+    csvresult.forEach((elem: object) => {
+      labels.forEach((e: string) => {
+        arrays[e as keyof object].push(+elem[e as keyof typeof elem])
+      })
+      return elem
     })
-    return elem
-  })
 
-  const ys = Object.values(arrays)
+    ys = Object.values(arrays)
+  }
 
   const scaler = d3PlotLib
     .Scaler()
@@ -43,12 +45,12 @@ async function createBoxPlot(ref: HTMLDivElement) {
   return container
 }
 
-export default function () {
+function BoxPlot(data: any) {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    await createBoxPlot(currRef)
+    await createBoxPlot(currRef, data)
   })
 
   return (
@@ -69,3 +71,25 @@ export default function () {
     </div>
   )
 }
+
+function BoxPlotContainer() {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    // declare the data fetching function
+    const fetchData = async () => {
+      const receivedData = await d3.csv('http://localhost:3000/assets/iris.csv')
+      setData(receivedData)
+    }
+
+    // eslint-disable-next-line no-console
+    fetchData().catch(console.error)
+  }, [])
+
+  if (data.length > 0) {
+    return <BoxPlot data={data} />
+  }
+  return <div>loading...</div>
+}
+
+export { createBoxPlot, BoxPlot, BoxPlotContainer }

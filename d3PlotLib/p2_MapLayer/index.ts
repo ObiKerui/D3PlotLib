@@ -1,28 +1,23 @@
-// MapLayer/index.ts
-"use strict";
-import { plotAttrs } from '../MapAttribs';
-
-declare const d3: any;
-declare const moment: any;
-declare const L: any;
-declare const $: any;
+import * as d3 from 'd3'
+import { dispatch } from 'd3-dispatch'
+import * as L from 'leaflet'
+import { plotAttrs } from '../MapAttribs'
 
 const publicAttributes = {
-  ...plotAttrs
+  ...plotAttrs,
 }
 
 export default function () {
-
-  let obj: any = JSON.parse(JSON.stringify(publicAttributes))
+  const obj: any = JSON.parse(JSON.stringify(publicAttributes))
   let _container: any = null
-  
+
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3.dispatch(
-    "customMouseOver",
-    "customMouseMove",
-    "customMouseOut",
-    "customMouseClick"
-  );
+  const dispatcher = dispatch(
+    'customMouseOver',
+    'customMouseMove',
+    'customMouseOut',
+    'customMouseClick'
+  )
 
   function plot(container: any) {
     _container = container
@@ -32,89 +27,82 @@ export default function () {
 
   // Building Blocks
   function buildContainerGroups() {
-    let svg = _container.svg
+    const { svg } = _container
 
-    let chartGroup = svg.select("g.map-group")
-    let children = chartGroup
-      .selectAll(function () { return this.childNodes })
+    const chartGroup = svg.select('g.map-group')
+    const children = chartGroup.selectAll(function () {
+      return this.childNodes
+    })
 
-    let existingElements = children.filter(`g.${obj.plotID}`)
-    if(existingElements.size() > 0) {
+    const existingElements = children.filter(`g.${obj.plotID}`)
+    if (existingElements.size() > 0) {
       return
     }
 
     obj.index = children.size()
     obj.plotID = `layer-${children.size()}`
-    chartGroup.append("g").classed(`${obj.plotID}`, true)
+    chartGroup.append('g').classed(`${obj.plotID}`, true)
   }
 
   function getPathCreator(map: any) {
     // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
-    const projectPoint = function(x : number, y : number) {
-        const point = map.latLngToLayerPoint(new L.LatLng(y, x));
-        this.stream.point(point.x, point.y);
+    const projectPoint = function (x: number, y: number) {
+      const point = map.latLngToLayerPoint(new L.LatLng(y, x))
+      this.stream.point(point.x, point.y)
     }
 
     // Use d3's custom geo transform method to implement the above
-    const projection = d3.geoTransform({point: projectPoint});
-    const pathCreator = d3.geoPath().projection(projection);
-    
-    return pathCreator;
+    const projection = d3.geoTransform({ point: projectPoint })
+    const pathCreator = d3.geoPath().projection(projection)
+
+    return pathCreator
   }
 
   function drawData() {
-    let map = _container.map
-    let svg = _container.svg
-    let pathCreator = getPathCreator(map)
-    let geojson: any = obj.geojson
-    let zoomLevel: number = map.getZoom()
+    const { map } = _container
+    const { svg } = _container
+    const pathCreator = getPathCreator(map)
+    const { geojson } = obj
+    const zoomLevel: number = map.getZoom()
 
     const styling = {
-      'stroke': 'Orange',
+      stroke: 'Orange',
       'stroke-width': '1px',
       'fill-opacity': '.3',
-      'fill' : 'green'    
+      fill: 'green',
     }
 
-    let mapGroup = svg.select(`.${obj.plotID}`)
+    const mapGroup = svg.select(`.${obj.plotID}`)
 
     // console.log('draw data called: ', svg, mapGroup, geojson)
 
     // select all rect in svg.chart-group with the class bar
-    let boundaries = mapGroup
-      .selectAll(".boundary")
-      .data(geojson.features)
+    let boundaries = mapGroup.selectAll('.boundary').data(geojson.features)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
-    boundaries.exit()
-      .style("opacity", 0)
-      .remove()
+    boundaries.exit().style('opacity', 0).remove()
 
     // Enter - add the shapes to this data point
-    let enterGroup = boundaries
-      .enter()
-      .append("path")
-      .classed("boundary", true)
+    const enterGroup = boundaries.enter().append('path').classed('boundary', true)
 
-    // join the new data points with existing 
+    // join the new data points with existing
     boundaries = boundaries.merge(enterGroup)
 
     boundaries
-      .attr("d", (features : any) => {
-          let param = features;
-          let result = pathCreator(param);
-          return result;
+      .attr('d', (features: any) => {
+        const param = features
+        const result = pathCreator(param)
+        return result
       })
-      .styles((elem : any) => {
-        if(obj.onStyle) {
+      .styles((elem: any) => {
+        if (obj.onStyle) {
           return obj.onStyle({ elem, zoomLevel })
-        } else {
-          return styling
         }
+        return styling
       })
   }
 
-  let chart: any = plot
+  const chart: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -129,7 +117,7 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
+  for (const attr in obj) {
     if (!chart[attr] && obj.hasOwnProperty(attr)) {
       chart[attr] = generateAccessor(attr)
     }
@@ -138,13 +126,13 @@ export default function () {
     return obj
   }
 
-  plot.onStyle = function(_x: any) {
-    if(arguments.length) {
+  plot.onStyle = function (_x: any) {
+    if (arguments.length) {
       obj.onStyle = _x
       return plot
     }
     return obj.onStyle
   }
 
-  return plot;
+  return plot
 }

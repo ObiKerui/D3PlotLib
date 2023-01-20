@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 
 declare const _: any
-declare const window: any
 
-export default function (functionCall: any) {
+type OnResizeFunc = () => void
+
+export default function (functionCall: OnResizeFunc) {
   useEffect(() => {
     const handleResize = _.debounce(functionCall, 500)
     functionCall()

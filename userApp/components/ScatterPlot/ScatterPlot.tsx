@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef } from 'react'
-declare const d3: any
-declare const d3PlotLib: any
+import * as d3 from 'd3'
+import * as d3PlotLib from '../../../d3PlotLib/main'
 
 import useCreatePlot from '../UseCreatePlot'
 import CodeBlock from '../CodeBlock'
@@ -8,59 +9,47 @@ import content from './create'
 
 import '../plot.css'
 
-let np = {
+const np = {
   linspace(from: number, stop: number, len: number) {
-    let multiplier = (stop - from) / len
-    let arr = d3.range(from, stop, multiplier)
+    const multiplier = (stop - from) / len
+    const arr = d3.range(from, stop, multiplier)
     return arr
   },
 
-  mean(arr: any) {
+  mean(arr: Iterable<d3.Numeric>) {
     return d3.mean(arr)
   },
 
-  std(arr: any) {
+  std(arr: Iterable<d3.Numeric>) {
     return d3.deviation(arr)
   },
 
-  random_normal(mu: any, sigma: any, len: any) {
-    let ftn = d3.randomNormal(mu, sigma)
-    let arr = Array.from({ length: len }, () => ftn())
+  random_normal(mu: number, sigma: number, len: number) {
+    const ftn = d3.randomNormal(mu, sigma)
+    const arr = Array.from({ length: len }, () => ftn())
     return arr
   },
-
-  histogram(arr: any, bins: number) {
-    let extents = d3.extent(arr)
-    let range = extents[1] - extents[0]
-    let binSize = range / bins
-    let binFtn = d3.bin().thresholds(bins)
-    let results = binFtn(arr)
-  },
 }
 
-let norm = {
-  pdf(xs: number[], mean: number, std: number): number[] {
-    let fnorm = (x: number) => (1 / Math.sqrt(2 * Math.PI)) * Math.exp((-x * x) / 2)
-    let result = xs.map((elem: number, ith: number) => {
-      return fnorm(elem)
-    })
-    // var y = new Array()
-    // for (var i = 0 ; i < x.length ; i++) {
-    //     y[i] = fnorm(x[i])
-    // }
-    return result
-  },
-}
+// const norm = {
+//   pdf(xs: number[]): number[] {
+//     const fnorm = (x: number) => (1 / Math.sqrt(2 * Math.PI)) * Math.exp((-x * x) / 2)
+//     const result = xs.map((elem: number) => fnorm(elem))
+//     // var y = new Array()
+//     // for (var i = 0 ; i < x.length ; i++) {
+//     //     y[i] = fnorm(x[i])
+//     // }
+//     return result
+//   },
+// }
 
 async function createScatterPlot(ref: HTMLDivElement) {
-  let csvresult = await d3.csv('assets/iris.csv')
+  const csvresult = await d3.csv('assets/iris.csv')
 
-  let xs = np.linspace(0, 160, 160)
+  const xs = np.linspace(0, 160, 160)
 
-  let keys = Object.keys(csvresult[0])
-  let obj: any = keys.reduce((accumulator, value) => {
-    return { ...accumulator, [value]: [] }
-  }, {})
+  const keys = Object.keys(csvresult[0])
+  const obj: any = keys.reduce((accumulator, value) => ({ ...accumulator, [value]: [] }), {})
 
   csvresult.forEach((elem: { [x: string]: any }) => {
     keys.forEach((e) => {
@@ -69,27 +58,24 @@ async function createScatterPlot(ref: HTMLDivElement) {
     return elem
   })
 
-  let ys = Object.values(obj)
+  const ys = Object.values(obj)
 
-  let scaler = d3PlotLib
+  const scaler = d3PlotLib
     .Scaler()
-    .xScale((xs: any) => {
-      return d3.scaleLinear().domain(d3.extent(xs))
-    })
-    .yScale((ys: any) => {
-      let merged = [].concat.apply([], ys)
+    .xScale((_xs: Iterable<d3.Numeric>) => d3.scaleLinear().domain(d3.extent(_xs)))
+    .yScale((_ys: Iterable<d3.Numeric>) => {
+      const merged: Iterable<d3.Numeric> = [].concat([], ..._ys)
       return d3.scaleLinear().domain(d3.extent(merged))
     })
 
-  let scatterPlot = d3PlotLib
+  const scatterPlot = d3PlotLib
     .ScatterPlot()
     .xs(xs)
     .ys(ys)
     .colours(['red', 'green', 'blue', 'black'])
     .labels(keys)
 
-  let container = d3PlotLib
-    .Container()
+  const container = (d3PlotLib.Container() as any)
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
     .scale(scaler)
@@ -102,26 +88,27 @@ async function createScatterPlot(ref: HTMLDivElement) {
 }
 
 export default function () {
-  let ref = useRef(null)
-  let plotObj = null
+  const ref = useRef(null)
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    let obj = await createScatterPlot(currRef)
-    plotObj = obj
+    await createScatterPlot(currRef)
   })
 
   return (
-    <div className='plot'>
+    <div className="plot">
       <div className="plot plot--container">
         <h3 id="scatter-plot">Scatter Plot</h3>
-        <div className="plot plot--area" ref={ref}></div>
+        <div className="plot plot--area" ref={ref} />
         <div className="plot plot--description">
-          <p>Scatter plot is for rendering such n such. Good for which types of visual, bad for these others..etc.</p>
+          <p>
+            Scatter plot is for rendering such n such. Good for which types of visual, bad for these
+            others..etc.
+          </p>
         </div>
       </div>
       <div className="plot plot--code">
-        <CodeBlock content={content}/>
+        <CodeBlock content={content} />
       </div>
     </div>
   )

@@ -1,37 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // p2_Scales/index.ts
-'use strict'
-
-declare const d3: any
-declare const moment: any
-declare const L: any
-declare const $: any
+// declare const d3: any
+// declare const moment: any
+// declare const L: any
+// declare const $: any
 
 export default function () {
-  let obj: any = {}
+  const obj: any = {}
 
   function toExport(containerAttrs: any, plottables: any) {
-
-    let xs : any = []
-    let ys : any = []
+    const xs: unknown[] = []
+    const ys: unknown[] = []
 
     // create a 2d array - each entry is an array of the y values
     // would not have to do this if plottable provides ys already in 2d array format...
     plottables.forEach((plottable: any) => {
+      const plotXS = plottable.xs()
+      if (Array.isArray(plotXS)) {
+        xs.push(plotXS)
+      }
 
-      let plot_xs = plottable.xs()
-      xs.push(plot_xs)
+      const plotYS = plottable.ys()
 
-      let plot_ys = plottable.ys()
-      if(Array.isArray(plot_ys[0])) {
-        ys.push(...plot_ys)
-      } else {
-        ys.push(plot_ys)
+      if (Array.isArray(plotYS)) {
+        if (Array.isArray(plotYS[0])) {
+          ys.push(...plotYS)
+        } else {
+          ys.push(plotYS)
+        }
       }
     })
 
     // get/compute the chart width/height (may add padding to this in future)
-    let chartWidth = containerAttrs.chartWidth
-    let chartHeight = containerAttrs.chartHeight
+    const { chartWidth } = containerAttrs
+    const { chartHeight } = containerAttrs
 
     let xScale = obj['xScale']
 

@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 import useCreatePlot from '../UseCreatePlot'
 
-async function createBarPlot(ref: HTMLDivElement) {
-  const xs = [1, 2, 3, 4, 5, 6, 7, 8]
-  const bars = [4, 5, 6, 6, 6, 7, 8, 9]
-  const yLineData = [2, 5]
+async function createBarPlot(ref: HTMLDivElement, data: any[]) {
+  const [xs, bars, yLineData] = data
 
   const scaler = d3PlotLib
     .Scaler()
@@ -26,12 +24,6 @@ async function createBarPlot(ref: HTMLDivElement) {
     .ys(bars)
     .labels(['Profit'])
 
-  // let plots = d3PlotLib.Plot()
-  // .xs(xs)
-  // .ys([baseline, target])
-  // .labels(['Baseline', 'Target'])
-  // .colours(['blue', 'green'])
-
   const yLines = d3PlotLib.AyLine().ys(yLineData)
 
   const legend = d3PlotLib.Legend()
@@ -48,12 +40,12 @@ async function createBarPlot(ref: HTMLDivElement) {
   return container
 }
 
-export default function () {
+function BarPlot({ data }: any): JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    await createBarPlot(currRef)
+    await createBarPlot(currRef, data)
   })
 
   return (
@@ -74,3 +66,29 @@ export default function () {
     </div>
   )
 }
+
+function BarPlotContainer() {
+  const [data, setData] = useState([])
+
+  const xs = [1, 2, 3, 4, 5, 6, 7, 8]
+  const bars = [4, 5, 6, 6, 6, 7, 8, 9]
+  const yLineData = [2, 5]
+
+  useEffect(() => {
+    // declare the data fetching function
+    const fetchData = async () => {
+      const receivedData = [xs, bars, yLineData]
+      setData(receivedData)
+    }
+
+    // eslint-disable-next-line no-console
+    fetchData().catch(console.error)
+  }, [])
+
+  if (data.length > 0) {
+    return <BarPlot data={data} />
+  }
+  return <div>loading...</div>
+}
+
+export { createBarPlot, BarPlot, BarPlotContainer }

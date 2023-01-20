@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 
 // next phase of development
 import p2_Scales from './p2_Scales'
@@ -34,41 +35,37 @@ import p2_devLabels from './p2_devLabels'
 import p2_Brush from './p2_Brush'
 
 export {
-    // phase 2
-    p2_Container as Container,
-    p2_Scales as Scaler,
-    p2_Plot as Plot,
-    p2_AxLines as AxLine,
-    p2_AyLines as AyLine,
-    p2_BarPlot as BarPlot,
-    p2_GroupedBarPlot as GroupedBarPlot,
-    p2_Histogram as Hist,    
-    p2_Legend as Legend,
-    p2_StackedArea as StackedArea,
-    p2_StackedBar as StackedBar,
-    
-    p2_CandlestickPlot as CandlestickPlot,
-    MovingAverageCalc as MovingAverageCalc,
+  // phase 2
+  p2_Container as Container,
+  p2_Scales as Scaler,
+  p2_Plot as Plot,
+  p2_AxLines as AxLine,
+  p2_AyLines as AyLine,
+  p2_BarPlot as BarPlot,
+  p2_GroupedBarPlot as GroupedBarPlot,
+  p2_Histogram as Hist,
+  p2_Legend as Legend,
+  p2_StackedArea as StackedArea,
+  p2_StackedBar as StackedBar,
+  p2_CandlestickPlot as CandlestickPlot,
+  MovingAverageCalc,
+  p2_Boxplot as BoxPlot,
+  p2_ViolinPlot as ViolinPlot,
+  p2_FillArea as FillArea,
+  p2_Donut as DonutPlot,
+  p2_ScatterPlot as ScatterPlot,
+  p2_Heatmap as Heatmap,
 
-    p2_Boxplot as BoxPlot,    
-    p2_ViolinPlot as ViolinPlot,
-    p2_FillArea as FillArea,
-    p2_Donut as DonutPlot,
-    p2_ScatterPlot as ScatterPlot,
-    p2_Heatmap as Heatmap,
-
-    // phase 3
-    p2_MapContainer as MapContainer,
-    p2_MapMarkers as MapMarkers,
-    p2_MapLayer as MapLayer,
-
-    p2_devGenericMapContainer as DevMapContainer,
-    p2_devGenericProjection as DevMapProjection,
-    p2_devGenericMapLayer as DevMapLayer,
-    p2_devGenericMapMarkers as DevMapMarkers,
-    p2_devHexBinLayer as DevHexBinLayer,
-
-    p2_devZoom as DevZoom,
-    p2_devLabels as DevLabels,    
-    p2_Brush as DevBrush
+  // phase 3
+  p2_MapContainer as MapContainer,
+  p2_MapMarkers as MapMarkers,
+  p2_MapLayer as MapLayer,
+  p2_devGenericMapContainer as DevMapContainer,
+  p2_devGenericProjection as DevMapProjection,
+  p2_devGenericMapLayer as DevMapLayer,
+  p2_devGenericMapMarkers as DevMapMarkers,
+  p2_devHexBinLayer as DevHexBinLayer,
+  p2_devZoom as DevZoom,
+  p2_devLabels as DevLabels,
+  p2_Brush as DevBrush,
 }

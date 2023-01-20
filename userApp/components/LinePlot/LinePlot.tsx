@@ -1,44 +1,40 @@
-import React, { useRef, useLayoutEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useRef } from 'react'
+import * as d3 from 'd3'
+import * as d3PlotLib from '../../../d3PlotLib/main'
 import CodeBlock from '../CodeBlock'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
 import '../plot.css'
 
-declare const d3: any
-declare const d3PlotLib: any
-
 function createLinePlot(ref: HTMLDivElement) {
-  let xs = [1, 2, 4, 4.1, 5]
-  let ys1 = [4, 5, 6, 6, 8]
-  let ys2 = [2, 3, 1, 2, 3]
-  let ys3 = [4, 5, 2, 1, 1]
+  const xs = [1, 2, 4, 4.1, 5]
+  const ys1 = [4, 5, 6, 6, 8]
+  const ys2 = [2, 3, 1, 2, 3]
+  const ys3 = [4, 5, 2, 1, 1]
 
-  let makeXScale = (xs: []) => {
-    return d3.scaleLinear().domain(d3.extent(xs))
-  }
+  const makeXScale = (_xs: Iterable<d3.Numeric>) => d3.scaleLinear().domain(d3.extent(_xs))
 
-  let makeYScale = (ys: []) => {
-    let merged = [].concat.apply([], ys)
+  const makeYScale = (ys: []) => {
+    const merged = [].concat([], ...ys)
     return d3.scaleLinear().domain(d3.extent(merged))
   }
 
-  let scaler = d3PlotLib.Scaler().xScale(makeXScale).yScale(makeYScale)
+  const scaler = d3PlotLib.Scaler().xScale(makeXScale).yScale(makeYScale)
 
-  let plot1 = d3PlotLib.Plot().tag('plot1').xs(xs).ys(ys1).labels('Norm')
+  const plot1 = d3PlotLib.Plot().tag('plot1').xs(xs).ys(ys1).labels('Norm')
 
-  let plot2 = d3PlotLib.Plot().xs(xs).ys(ys2).labels('LogNorm').styles('--').alpha(0.3)
+  const plot2 = d3PlotLib.Plot().xs(xs).ys(ys2).labels('LogNorm').styles('--').alpha(0.3)
 
-  let plot3 = d3PlotLib.Plot().xs(xs).ys(ys3).labels('SkewNorm')
+  const plot3 = d3PlotLib.Plot().xs(xs).ys(ys3).labels('SkewNorm')
 
-  let vLine = d3PlotLib.AxLine().xs([2.8]).labels('Cut Off').alpha(0.5).styles('--')
+  const vLine = d3PlotLib.AxLine().xs([2.8]).labels('Cut Off').alpha(0.5).styles('--')
 
   // create a fill-between above the line but below the curve.
-  let condition = (x: any) => {
-    return x > 1.8 && x <= 4.6
-  }
+  const condition = (x: any) => x > 1.8 && x <= 4.6
 
-  let fillBetween = d3PlotLib
+  const fillBetween = d3PlotLib
     .FillArea()
     .xs(xs)
     .ys(ys1)
@@ -48,10 +44,9 @@ function createLinePlot(ref: HTMLDivElement) {
     .colours(['blue'])
     .labels(['filled in'])
 
-  let legend = d3PlotLib.Legend().position('topleft')
+  const legend = d3PlotLib.Legend().position('topleft')
 
-  let container = d3PlotLib
-    .Container()
+  const container = (d3PlotLib.Container() as any)
     .showMargins(false)
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
@@ -69,30 +64,30 @@ function createLinePlot(ref: HTMLDivElement) {
 }
 
 export default function () {
-  let ref = useRef(null)
-  let plotObj: any = null
+  const ref = useRef(null)
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    let obj = await createLinePlot(currRef)
-    plotObj = obj
+    await createLinePlot(currRef)
   })
 
   return (
-    <div className='plot'>
+    <div className="plot">
       <div className="plot plot--container">
         <h3 id="line-plot">Line Plot</h3>
-        <div className="plot plot--area" ref={ref}></div>
+        <div className="plot plot--area" ref={ref} />
         <div className="plot plot--description">
-          <p>Line plot is for rendering such n such. Good for which types of visual, bad for these others..etc.</p>
+          <p>
+            Line plot is for rendering such n such. Good for which types of visual, bad for these
+            others..etc.
+          </p>
         </div>
       </div>
       <div className="plot plot--code">
         <code>
-          <CodeBlock content={content}/>
+          <CodeBlock content={content} />
         </code>
       </div>
     </div>
   )
-
 }

@@ -1,77 +1,67 @@
-// MapLayer/index.ts
-"use strict";
-import { plotAttrs } from '../MapAttribs';
-
-declare const d3: any;
-declare const moment: any;
-declare const L: any;
-declare const $: any;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as d3 from 'd3'
+// import * as d3Dispatch from 'd3-dispatch'
+import { plotAttrs } from '../MapAttribs'
 
 const publicAttributes = {
-  ...plotAttrs
+  ...plotAttrs,
 }
 
 export default function () {
+  const obj: any = JSON.parse(JSON.stringify(publicAttributes))
+  let container: any = null
 
-  let obj: any = JSON.parse(JSON.stringify(publicAttributes))
-  let _container: any = null
-  
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3.dispatch(
-    "customMouseOver",
-    "customMouseMove",
-    "customMouseOut",
-    "customMouseClick"
-  );
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   // Building Blocks
   function buildContainerGroups() {
-    let svg = _container.svg
+    const { svg } = container
 
-    let chartGroup = svg.select("g.map-group")
-    let children = chartGroup
-      .selectAll(function () { return this.childNodes })
+    const chartGroup = svg.select('g.map-group')
+    const children = chartGroup.selectAll(function () {
+      return this.childNodes
+    })
 
-    let existingElements = children.filter(`g.${obj.plotID}`)
-    if(existingElements.size() > 0) {
+    const existingElements = children.filter(`g.${obj.plotID}`)
+    if (existingElements.size() > 0) {
       return
     }
 
     obj.index = children.size()
     obj.plotID = `layer-${children.size()}`
-    chartGroup.append("g").classed(`${obj.plotID}`, true)
+    chartGroup.append('g').classed(`${obj.plotID}`, true)
   }
 
-//   function getPathCreator(map: any) {
-//     // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
-//     const projectPoint = function(x : number, y : number) {
-//         const point = map.latLngToLayerPoint(new L.LatLng(y, x));
-//         this.stream.point(point.x, point.y);
-//     }
+  //   function getPathCreator(map: any) {
+  //     // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
+  //     const projectPoint = function(x : number, y : number) {
+  //         const point = map.latLngToLayerPoint(new L.LatLng(y, x));
+  //         this.stream.point(point.x, point.y);
+  //     }
 
-//     // Use d3's custom geo transform method to implement the above
-//     const projection = d3.geoTransform({point: projectPoint});
-//     const pathCreator = d3.geoPath().projection(projection);
-    
-//     return pathCreator;
-//   }
+  //     // Use d3's custom geo transform method to implement the above
+  //     const projection = d3.geoTransform({point: projectPoint});
+  //     const pathCreator = d3.geoPath().projection(projection);
 
-  function getPathCreator(states : any) {
+  //     return pathCreator;
+  //   }
+
+  function getPathCreator(states: any) {
     // how it's done in the book example...
     const projection = d3.geoMercator()
     const pathCreator = d3.geoPath().projection(projection)
-    const width = _container.mapWidth
-    const height = _container.mapHeight
+    const width = container.mapWidth
+    const height = container.mapHeight
 
     // Setup the scale and translate
-    projection.scale(1).translate([0, 0]);
-    var geographicBounds = pathCreator.bounds(states);
+    projection.scale(1).translate([0, 0])
+    const geographicBounds = pathCreator.bounds(states)
 
     const leftBottom = geographicBounds[0]
     const minLongitude = leftBottom[0]
@@ -104,34 +94,32 @@ export default function () {
     // console.log('add and sub bounds long + - ', (maxLongitude + minLongitude), (maxLongitude - minLongitude))
     // console.log('translate height a b ', heightScale, subHeight)
 
-    const translator = [widthScale, heightScale]
+    // const translator = [widthScale, heightScale]
     // const translator = [subWidth, subHeight]
     // var translator = [(width - scaler * (geographicBounds[1][0] + geographicBounds[0][0])) / 2, (height - scaler * (geographicBounds[1][1] + geographicBounds[0][1])) / 2];
-    
-    projection
-    .scale(scaler)
-    .translate(translator)
+
+    projection.scale(scaler).translate([widthScale, heightScale])
 
     return pathCreator
   }
 
   function drawData() {
-    let svg = _container.svg
-    let geojson: any = obj.geojson
+    const { svg } = container
+    const { geojson } = obj
     // let zoomLevel: number = _container.getZoom()
 
     // let pathCreator = getPathCreator(geojson)
-    let pathCreator = _container.projector
+    const pathCreator = container.projector
 
     const styling = {
-      'stroke': 'Brown',
+      stroke: 'Brown',
       'stroke-opacity': '.2',
       'stroke-width': '1px',
       'fill-opacity': '.1',
-      'fill' : 'green'    
+      fill: 'green',
     }
 
-    let mapGroup = svg.select(`.${obj.plotID}`)
+    const mapGroup = svg.select(`.${obj.plotID}`)
 
     // function handleZoom(a: any, b: any, e: any) {
     //   mapGroup.attr('transform', d3.event.transform)
@@ -144,40 +132,38 @@ export default function () {
     // console.log('draw data called: ', svg, mapGroup, geojson)
 
     // select all rect in svg.chart-group with the class bar
-    let boundaries = mapGroup
-      .selectAll(".boundary")
-      .data(geojson.features)
+    let boundaries = mapGroup.selectAll('.boundary').data(geojson.features)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
-    boundaries.exit()
-      .style("opacity", 0)
-      .remove()
+    boundaries.exit().style('opacity', 0).remove()
 
     // Enter - add the shapes to this data point
-    let enterGroup = boundaries
-      .enter()
-      .append("path")
-      .classed("boundary", true)
+    const enterGroup = boundaries.enter().append('path').classed('boundary', true)
 
-    // join the new data points with existing 
+    // join the new data points with existing
     boundaries = boundaries.merge(enterGroup)
 
     boundaries
-      .attr("d", (features : any) => {
-          let param = features;
-          let result = pathCreator(param);
-          return result;
+      .attr('d', (features: any) => {
+        const param = features
+        const result = pathCreator(param)
+        return result
       })
-      .styles((elem : any) => {
-        if(obj.onStyle) {
+      .styles((elem: any) => {
+        if (obj.onStyle) {
           return obj.onStyle({ elem })
-        } else {
-          return styling
         }
+        return styling
       })
   }
 
-  let chart: any = plot
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
+  }
+
+  const chart: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -192,30 +178,35 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  // for (const attr in obj) {
+  //   if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  //     chart[attr] = generateAccessor(attr)
+  //   }
+  // }
+  Object.keys(obj).forEach((attr: any) => {
+    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)
     }
-  }
+  })
   plot.attr = function () {
     return obj
   }
 
-  plot.onStyle = function(_x: any) {
-    if(arguments.length) {
+  plot.onStyle = function (_x: any) {
+    if (arguments.length) {
       obj.onStyle = _x
       return plot
     }
     return obj.onStyle
   }
 
-  plot.feature = function(_x: any) {
-    if(arguments.length) {
-        obj.feature = _x
-        return plot
+  plot.feature = function (_x: any) {
+    if (arguments.length) {
+      obj.feature = _x
+      return plot
     }
     return obj.feature
   }
 
-  return plot;
+  return plot
 }

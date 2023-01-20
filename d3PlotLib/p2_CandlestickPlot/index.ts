@@ -1,11 +1,7 @@
-// p2_CandlestickPlot /index.ts
-'use strict'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as d3Dispatch from 'd3-dispatch'
+import * as d3 from 'd3'
 import { plotAttrs } from '../ChartAttribs'
-
-declare const d3: any
-declare const moment: any
-declare const L: any
-declare const $: any
 
 const colorScheme = ['red', 'green', 'blue', 'grey']
 
@@ -14,7 +10,7 @@ export default function () {
   let _container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3.dispatch(
+  const dispatcher = d3Dispatch.dispatch(
     'customMouseOver',
     'customMouseMove',
     'customMouseOut',

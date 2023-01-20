@@ -1,26 +1,20 @@
-// AxLines/index.ts
-"use strict";
-import { lineAttrs } from '../ChartAttribs';
-
-declare const d3: any;
-declare const moment: any;
-declare const L: any;
-declare const $: any;
+import { dispatch } from 'd3-dispatch'
+import * as d3 from 'd3'
+import { lineAttrs } from '../ChartAttribs'
 
 const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
-
-  let obj: any = JSON.parse(JSON.stringify(lineAttrs))
+  const obj: any = JSON.parse(JSON.stringify(lineAttrs))
   let _container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3.dispatch(
-    "customMouseOver",
-    "customMouseMove",
-    "customMouseOut",
-    "customMouseClick"
-  );
+  const dispatcher = dispatch(
+    'customMouseOver',
+    'customMouseMove',
+    'customMouseOut',
+    'customMouseClick'
+  )
 
   function plot(container: any) {
     _container = container
@@ -30,36 +24,38 @@ export default function () {
   }
 
   function buildContainerGroups() {
-    let svg = _container.svg
+    const { svg } = _container
 
-    let chartGroup = svg.select("g.chart-group")
-    let children = chartGroup
-      .selectAll(function () { return this.childNodes })
+    const chartGroup = svg.select('g.chart-group')
+    const children = chartGroup.selectAll(function () {
+      return this.childNodes
+    })
 
-    let existingElements = children.filter(`g.${obj.lineID}`)
-    if(existingElements.size() > 0) {
+    const existingElements = children.filter(`g.${obj.lineID}`)
+    if (existingElements.size() > 0) {
       return
     }
-  
+
     obj.index = children.size()
     obj.lineID = `line-${obj.index}`
 
-    chartGroup.append("g").classed(`${obj.lineID}`, true);
+    chartGroup.append('g').classed(`${obj.lineID}`, true)
 
-    let containerWidth = _container.chartWidth
-    let containerHeight = _container.chartHeight
+    const containerWidth = _container.chartWidth
+    const containerHeight = _container.chartHeight
     obj.clipPathId = `${obj.plotID}-clippath`
 
-    chartGroup.append("clipPath")
-      .attr("id", obj.clipPathId)
-      .append("rect")
-      .attr("width", containerWidth + 30)
-      .attr("height", containerHeight)
+    chartGroup
+      .append('clipPath')
+      .attr('id', obj.clipPathId)
+      .append('rect')
+      .attr('width', containerWidth + 30)
+      .attr('height', containerHeight)
 
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
-    let index = (obj.index % colorScheme.length)
+    const index = obj.index % colorScheme.length
     obj.colour = colorScheme[index]
   }
 
@@ -67,7 +63,7 @@ export default function () {
     // check ys for 2d array
     obj.ys = Array.isArray(obj.ys[0]) ? obj.ys : [obj.ys]
 
-    // check labels 
+    // check labels
     obj.labels = Array.isArray(obj.labels) ? obj.labels : [obj.labels]
 
     // check colours
@@ -78,88 +74,76 @@ export default function () {
 
     // check alphas
     obj.alpha = Array.isArray(obj.alpha) ? obj.alpha : [obj.alpha]
-
   }
 
   function drawData() {
-    let ys = obj.ys
-    let xs = obj.xs
-    let strokeColour = obj.colour
-    let xScale = _container.xScale
-    let yScale = _container.yScale
-    let alpha = obj.alpha
-    let style = obj.style
-    let lineEffect = ""
-    let svg = _container.svg
+    const { ys } = obj
+    const { xs } = obj
+    const strokeColour = obj.colour
+    const { xScale } = _container
+    const { yScale } = _container
+    const { alpha } = obj
+    const { style } = obj
+    let lineEffect = ''
+    const { svg } = _container
 
     // set the line style
-    if(style == "--") {
-        lineEffect = "stroke-dasharray"
+    if (style == '--') {
+      lineEffect = 'stroke-dasharray'
     }
 
     // get start / end y value
-    let yStart = yScale.domain()[0]
-    let yEnd = yScale.domain()[1]
-    let xPoints = xs
+    const yStart = yScale.domain()[0]
+    const yEnd = yScale.domain()[1]
+    const xPoints = xs
 
     // console.log('show yStart / yEnd / xs / ys / xPoints / ypoints: ', yStart, yEnd, xs, ys, xPoints, yPoints)
 
-    let chartGroup = svg.select(`.${obj.lineID}`)
+    const chartGroup = svg.select(`.${obj.lineID}`)
 
-    let lines = chartGroup
-      .selectAll(".lines")
-      .data(xPoints)
+    let lines = chartGroup.selectAll('.lines').data(xPoints)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
-    lines.exit()
-      .style("opacity", 0)
-      .remove();
+    lines.exit().style('opacity', 0).remove()
 
     // Enter - add the shapes to this data point
-    let enterGroup = lines
+    const enterGroup = lines
       .enter()
-      .append("line")
-      .classed("lines", true)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
+      .append('line')
+      .classed('lines', true)
+      .attr('fill', 'none')
+      .attr('stroke', 'steelblue')
+      .attr('stroke-width', 1.5)
 
-    // join the new data points with existing 
+    // join the new data points with existing
     lines = lines.merge(enterGroup)
 
     // now position and colour what exists on the dom
-    lines.attr("x1", function(d: any, i: any) {
-      return xScale(d)
-    })
-    .attr("x2", function(d: any, i: any) {
-      return xScale(d)
-    })
-    .attr("y1", function(d: any, i: any) {
-      return yScale(yStart)
-    })
-    .attr("y2", function(d: any, i: any) {
-      return yScale(yEnd)
-    })
-    .attr("clip-path", `url(#${obj.clipPathId})`)
-      .attr("stroke", strokeColour)
-      .style("opacity", alpha)
-      .style(lineEffect, ("3, 3"))
-      .on("mouseover", function (d: any) {
-        d3.select(this).style("cursor", "pointer")
-        dispatcher.call("customMouseOver", this, d);
+    lines
+      .attr('x1', (d: any, i: any) => xScale(d))
+      .attr('x2', (d: any, i: any) => xScale(d))
+      .attr('y1', (d: any, i: any) => yScale(yStart))
+      .attr('y2', (d: any, i: any) => yScale(yEnd))
+      .attr('clip-path', `url(#${obj.clipPathId})`)
+      .attr('stroke', strokeColour)
+      .style('opacity', alpha)
+      .style(lineEffect, '3, 3')
+      .on('mouseover', function (d: any) {
+        d3.select(this).style('cursor', 'pointer')
+        dispatcher.call('customMouseOver', this, d)
       })
-      .on("mousemove", function (d: any) {
-        dispatcher.call("customMouseMove", this, d);
+      .on('mousemove', function (d: any) {
+        dispatcher.call('customMouseMove', this, d)
       })
-      .on("mouseout", function (d: any) {
-        dispatcher.call("customMouseOut", this, d);
+      .on('mouseout', function (d: any) {
+        dispatcher.call('customMouseOut', this, d)
       })
-      .on("click", function (d: any) {
-        dispatcher.call("customMouseClick", this, d);
-      });
+      .on('click', function (d: any) {
+        dispatcher.call('customMouseClick', this, d)
+      })
   }
 
-  let callable_obj: any = plot
+  const callable_obj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -174,33 +158,29 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
+  for (const attr in obj) {
     if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
       callable_obj[attr] = generateAccessor(attr)
     }
   }
 
   callable_obj.on = function (_x: any) {
-    let value = dispatcher.on.apply(dispatcher, arguments);
-    return value === dispatcher ? callable_obj : value;
+    const value = dispatcher.on.apply(dispatcher, arguments)
+    return value === dispatcher ? callable_obj : value
   }
 
   callable_obj.attr = function () {
     return obj
   }
 
-  callable_obj.extent = function() {
-    let x_extent = d3.extent(obj.xs, (elem : any) =>  {
-      return elem
-    })
+  callable_obj.extent = function () {
+    const x_extent = d3.extent(obj.xs, (elem: any) => elem)
 
-    let y_extent = d3.extent(obj.ys, (elem : any) => {
-      return elem
-    })
+    const y_extent = d3.extent(obj.ys, (elem: any) => elem)
 
     return {
-      x : x_extent,
-      y : y_extent
+      x: x_extent,
+      y: y_extent,
     }
   }
 
@@ -209,7 +189,7 @@ export default function () {
   //   return d3.extent(obj.xs, (elem : any) =>  {
   //     return elem
   //   })
-  // } 
+  // }
 
   // // TODO needs to be more well thought out
   // callable_obj.y = function() {
@@ -218,5 +198,5 @@ export default function () {
   //   })
   // }
 
-  return callable_obj;
+  return callable_obj
 }
