@@ -39,10 +39,11 @@ export default function () {
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
-    const index = obj.index % colorScheme.length
+    // const index = obj.index % colorScheme.length
     obj.colours = colorScheme
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function prepareData() {
     // check ys for 2d array
     obj.ys = Array.isArray(obj.ys[0]) ? obj.ys : [obj.ys]
@@ -60,6 +61,7 @@ export default function () {
     obj.alpha = Array.isArray(obj.alpha) ? obj.alpha : [obj.alpha]
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function violinpreprocess(ys: any[], binFtn: any) {
     // Compute the binning for each group of the dataset
     const sumstat = d3Collection
@@ -77,6 +79,7 @@ export default function () {
     return sumstat
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function makeBins(arr: number[], bins: number[]) {
     const { yScale } = container
     const binFtn = d3Array.bin().domain(yScale.domain()).thresholds(bins)
@@ -115,16 +118,8 @@ export default function () {
 
     // What is the biggest number of value in a bin? We need it cause this value will have a width of 100% of the bandwidth.
     let maxNum = 0
-    // for (const i in sumstat) {
-    //   const bins = sumstat[i]
-    //   lengths = bins.map((a: any) => a.length)
-    //   longest = d3.max(lengths)
-    //   if (longest > maxNum) {
-    //     maxNum = longest
-    //   }
-    // }
 
-    Object.keys(sumstat).forEach((elem: any) => {
+    sumstat.forEach((elem: any) => {
       const bins = elem
       lengths = bins.map((a: any) => a.length)
       longest = d3.max(lengths)
@@ -349,12 +344,6 @@ export default function () {
     return accessor
   }
 
-  // generate the chart attributes
-  // for (const attr in obj) {
-  //   if (!callableObj[attr] && obj.hasOwnProperty(attr)) {
-  //     callableObj[attr] = generateAccessor(attr)
-  //   }
-  // }
   Object.keys(obj).forEach((attr: any) => {
     if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       callableObj[attr] = generateAccessor(attr)

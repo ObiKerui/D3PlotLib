@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
-import { dispatch } from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 import * as d3Hexbin from 'd3-hexbin'
 import { plotAttrs } from '../MapAttribs'
 
@@ -10,25 +10,19 @@ const publicAttributes = {
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(publicAttributes))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   // Building Blocks
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.map-group')
     const children = chartGroup.selectAll(function () {
@@ -46,13 +40,12 @@ export default function () {
   }
 
   function getPointGrid(cols: number) {
-    const width = _container.mapWidth
-    const height = _container.mapHeight
+    const width = container.mapWidth
+    const height = container.mapHeight
 
-    console.log('map height / width: ', _container)
     const hexDistance = width / cols
     const rows = Math.floor(height / hexDistance)
-    const hexRadius = hexDistance / 1.5
+    // const hexRadius = hexDistance / 1.5
     // console.log('get point grid stuff: ', width, height, hexDistance, rows, hexRadius)
 
     const rangeOfValues = d3.range(rows * cols)
@@ -131,10 +124,10 @@ export default function () {
   }
 
   function drawData() {
-    const { svg } = _container
+    const { svg } = container
     const { geojson } = obj
     const { datapoints } = obj
-    const pathCreator = _container.projector
+    const pathCreator = container.projector
     const projection = pathCreator.projection()
     // let zoomLevel: number = _container.getZoom()
 
@@ -189,7 +182,7 @@ export default function () {
       })
       .domain([maxLength, 1])
 
-    const radiusScale = d3.scaleSqrt().domain([0, maxLength]).range([3.5, 15])
+    // const radiusScale = d3.scaleSqrt().domain([0, maxLength]).range([3.5, 15])
 
     let hexGroup = mapGroup.selectAll('.hexes').data(rolledUpData)
 
@@ -214,6 +207,12 @@ export default function () {
       .style('opacity', '0.8')
   }
 
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
+  }
+
   const chart: any = plot
 
   function generateAccessor(attr: any) {
@@ -229,11 +228,11 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)
     }
-  }
+  })
   plot.attr = function () {
     return obj
   }

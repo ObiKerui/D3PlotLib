@@ -45,7 +45,7 @@ async function createBoxPlot(ref: HTMLDivElement, csvresult: any) {
   return container
 }
 
-function BoxPlot(data: any) {
+function BoxPlot({ data }: any) {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useCreatePlot(async () => {

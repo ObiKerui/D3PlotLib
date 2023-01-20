@@ -7,7 +7,7 @@ const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(plotAttrs))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
   // const dispatcher = d3Dispatch.dispatch(
@@ -18,7 +18,7 @@ export default function () {
   // )
 
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.chart-group')
     const children = chartGroup.selectAll(function () {
@@ -37,7 +37,7 @@ export default function () {
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
-    const index = obj.index % colorScheme.length
+    // const index = obj.index % colorScheme.length
     obj.colours = colorScheme
   }
 
@@ -46,15 +46,15 @@ export default function () {
     const nbrCols = ys[0].length
     const dataset = []
 
-    for (let col = 0; col < nbrCols; col++) {
-      const column_obj: any = {}
+    for (let col = 0; col < nbrCols; col += 1) {
+      const columnObj: any = {}
 
-      for (let row = 0; row < nbrRows; row++) {
-        const row_elem = ys[row]
+      for (let row = 0; row < nbrRows; row += 1) {
+        const rowElem = ys[row]
         const label: string = keys[row]
-        column_obj[label as keyof typeof column_obj] = row_elem[col]
+        columnObj[label as keyof typeof columnObj] = rowElem[col]
       }
-      dataset.push(column_obj)
+      dataset.push(columnObj)
     }
 
     // console.log('what dataset did we build? ', arr)
@@ -65,23 +65,23 @@ export default function () {
     const { xs } = obj
     const { ys } = obj
     const { labels } = obj
-    const { index } = obj
-    const strokeColour = obj.colour
-    const { xScale } = _container
-    const { yScale } = _container
+    // const { index } = obj
+    // const strokeColour = obj.colour
+    const { xScale } = container
+    const { yScale } = container
 
     // console.log('stacked area draw : obj / xs / ys / test xscale / test yscale ', obj, xs, ys, xScale(xs[0]), yScale(ys[0]))
 
-    const { alpha } = obj
-    const { style } = obj
-    let lineEffect = ''
+    // const { alpha } = obj
+    // const { style } = obj
+    // let lineEffect = ''
 
     // set the line style
-    if (style == '--') {
-      lineEffect = 'stroke-dasharray'
-    }
+    // if (style === '--') {
+    //   lineEffect = 'stroke-dasharray'
+    // }
 
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select(`.${obj.plotID}`)
 
@@ -132,8 +132,8 @@ export default function () {
       .attr('d', (d: any) => area(d))
   }
 
-  function plot(container: any) {
-    _container = container
+  function plot(_container: any) {
+    container = _container
     buildContainerGroups()
     drawData()
   }
@@ -152,12 +152,6 @@ export default function () {
     return accessor
   }
 
-  // generate the chart attributes
-  // for (const attr in obj) {
-  //   if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-  //     callable_obj[attr] = generateAccessor(attr)
-  //   }
-  // }
   Object.keys(obj).forEach((attr: any) => {
     if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       callableObj[attr] = generateAccessor(attr)
@@ -172,28 +166,6 @@ export default function () {
   callableObj.attr = function () {
     return obj
   }
-
-  // callable_obj.extent = function (_x: any) {
-  //   if (arguments.length) {
-  //     obj['extent'] = _x
-  //     return callable_obj
-  //   }
-
-  //   // console.log('obj xs and ys: ', obj.xs, obj.ys)
-
-  //   let x_extent = d3.extent(obj.xs, (elem: any) => {
-  //     return elem
-  //   })
-
-  //   let y_extent = d3.extent(obj.ys, (elem: any) => {
-  //     return elem
-  //   })
-
-  //   return {
-  //     x: x_extent,
-  //     y: y_extent,
-  //   }
-  // }
 
   return callableObj
 }

@@ -1,4 +1,5 @@
-import { dispatch } from 'd3-dispatch'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as d3Dispatch from 'd3-dispatch'
 import * as d3 from 'd3'
 import { lineAttrs } from '../ChartAttribs'
 
@@ -6,25 +7,18 @@ const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(lineAttrs))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
+  const dispatcher = d3Dispatch.dispatch(
     'customMouseOver',
     'customMouseMove',
     'customMouseOut',
     'customMouseClick'
   )
 
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    prepareData()
-    drawData()
-  }
-
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.chart-group')
     const children = chartGroup.selectAll(function () {
@@ -41,8 +35,8 @@ export default function () {
 
     chartGroup.append('g').classed(`${obj.lineID}`, true)
 
-    const containerWidth = _container.chartWidth
-    const containerHeight = _container.chartHeight
+    const containerWidth = container.chartWidth
+    const containerHeight = container.chartHeight
     obj.clipPathId = `${obj.plotID}-clippath`
 
     chartGroup
@@ -77,18 +71,18 @@ export default function () {
   }
 
   function drawData() {
-    const { ys } = obj
+    // const { ys } = obj
     const { xs } = obj
     const strokeColour = obj.colour
-    const { xScale } = _container
-    const { yScale } = _container
+    const { xScale } = container
+    const { yScale } = container
     const { alpha } = obj
     const { style } = obj
     let lineEffect = ''
-    const { svg } = _container
+    const { svg } = container
 
     // set the line style
-    if (style == '--') {
+    if (style === '--') {
       lineEffect = 'stroke-dasharray'
     }
 
@@ -120,10 +114,10 @@ export default function () {
 
     // now position and colour what exists on the dom
     lines
-      .attr('x1', (d: any, i: any) => xScale(d))
-      .attr('x2', (d: any, i: any) => xScale(d))
-      .attr('y1', (d: any, i: any) => yScale(yStart))
-      .attr('y2', (d: any, i: any) => yScale(yEnd))
+      .attr('x1', (d: any) => xScale(d))
+      .attr('x2', (d: any) => xScale(d))
+      .attr('y1', () => yScale(yStart))
+      .attr('y2', () => yScale(yEnd))
       .attr('clip-path', `url(#${obj.clipPathId})`)
       .attr('stroke', strokeColour)
       .style('opacity', alpha)
@@ -143,7 +137,14 @@ export default function () {
       })
   }
 
-  const callable_obj: any = plot
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    prepareData()
+    drawData()
+  }
+
+  const callableObj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -152,51 +153,26 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
-  }
+  // callableObj.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
-  callable_obj.attr = function () {
+  callableObj.attr = function () {
     return obj
   }
 
-  callable_obj.extent = function () {
-    const x_extent = d3.extent(obj.xs, (elem: any) => elem)
-
-    const y_extent = d3.extent(obj.ys, (elem: any) => elem)
-
-    return {
-      x: x_extent,
-      y: y_extent,
-    }
-  }
-
-  // // TODO needs to be more well thought out
-  // callable_obj.x = function() {
-  //   return d3.extent(obj.xs, (elem : any) =>  {
-  //     return elem
-  //   })
-  // }
-
-  // // TODO needs to be more well thought out
-  // callable_obj.y = function() {
-  //   return d3.extent(obj.ys, (elem : any) => {
-  //     return elem
-  //   })
-  // }
-
-  return callable_obj
+  return callableObj
 }

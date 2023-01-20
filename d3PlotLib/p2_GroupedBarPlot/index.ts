@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
-import { dispatch } from 'd3-dispatch'
+// import { dispatch } from 'd3-dispatch'
 import { plotAttrs, barsAttrs } from '../ChartAttribs'
 
 const publicAttrs = {
@@ -9,27 +10,21 @@ const publicAttrs = {
 
 export default function () {
   // console.log('BarChart/index:21: what is public attrs: ', publicAttributes)
-  let _container: any = null
+  let container: any = null
 
   const obj: any = JSON.parse(JSON.stringify(publicAttrs))
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
     // console.log('what is container when build groups: ', _container)
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.chart-group')
     const children = chartGroup.selectAll(function () {
@@ -49,11 +44,11 @@ export default function () {
 
   function drawData() {
     const { ys } = obj
-    const { xs } = obj
-    const { xScale } = _container
-    const { yScale } = _container
-    const { chartHeight } = _container
-    const { svg } = _container
+    // const { xs } = obj
+    const { xScale } = container
+    const { yScale } = container
+    const { chartHeight } = container
+    const { svg } = container
     const subgroups: any[] = ['Nitrogen', 'normal', 'stress']
 
     const chartGroup = svg.select(`.${obj.plotID}`)
@@ -101,12 +96,18 @@ export default function () {
       )
   }
 
-  const callable_obj: any = plot
-
-  callable_obj.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
   }
+
+  const callableObj: any = plot
+
+  // callableObj.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
   /**
    * Gets or Sets the text of the yAxisLabel on the chart
@@ -122,28 +123,17 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.extent = function () {
-    const x_extent = d3.extent(obj.xs, (elem: any) => elem)
-
-    const y_extent = d3.extent(obj.ys, (elem: any) => elem)
-
-    return {
-      x: x_extent,
-      y: y_extent,
-    }
-  }
-
-  return callable_obj
+  return callableObj
 }

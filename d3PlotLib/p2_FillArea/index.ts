@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // p2_FillArea/index.ts
 import * as d3 from 'd3'
-import * as d3Dispatch from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 
 import { plotAttrs } from '../ChartAttribs'
 import interpolator from './interpolator'
@@ -10,24 +10,18 @@ const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(plotAttrs))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.chart-group')
     const children = chartGroup.selectAll(function () {
@@ -56,8 +50,8 @@ export default function () {
     const whereFtn = obj.where
     const { labels } = obj
     const { colours } = obj
-    const { xScale } = _container
-    const { yScale } = _container
+    const { xScale } = container
+    const { yScale } = container
 
     const ipltr = interpolator({
       xs,
@@ -68,15 +62,15 @@ export default function () {
     const { newXs, newYs } = ipltr()
 
     const { alpha } = obj
-    const { style } = obj
-    let lineEffect = ''
+    // const { style } = obj
+    // let lineEffect = ''
 
     // set the line style
-    if (style === '--') {
-      lineEffect = 'stroke-dasharray'
-    }
+    // if (style === '--') {
+    //   lineEffect = 'stroke-dasharray'
+    // }
 
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select(`.${obj.plotID}`)
 
@@ -112,7 +106,13 @@ export default function () {
       .attr('d', (d: any) => area(d))
   }
 
-  const callable_obj: any = plot
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
+  }
+
+  const callableObj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -121,33 +121,33 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
-  }
+  // callableObj.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
-  callable_obj.attr = function () {
+  callableObj.attr = function () {
     return obj
   }
 
-  callable_obj.where = function (_x: any) {
+  callableObj.where = function (_x: any) {
     if (arguments.length) {
       obj.where = _x
-      return callable_obj
+      return callableObj
     }
     return obj.where
   }
-  return callable_obj
+  return callableObj
 }

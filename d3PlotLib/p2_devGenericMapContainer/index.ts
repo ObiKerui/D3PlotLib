@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
-import * as d3Dispatch from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 import { plotAttrs, containerAttrs } from '../MapAttribs'
 
 const publicAttributes = {
@@ -13,37 +13,12 @@ export default function () {
   const plots: any = []
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function toExport(html_selection: any) {
-    obj.mapWidth = obj.width - obj.margin.left - obj.margin.right
-    obj.mapHeight = obj.height - obj.margin.top - obj.margin.bottom
-
-    buildSVG(html_selection.node())
-    // buildSVG(html_selection)
-    buildProjector()
-
-    // obj.map.on('zoomend', () => {
-    //   plots.forEach((plot: any) => {
-    //     plot(obj)
-    //   })
-    // })
-
-    plots.forEach((plot: any) => {
-      plot(obj)
-    })
-
-    if (obj.showMargins) {
-      obj.svg.style('background-color', 'rgba(255, 0, 0, .2)')
-    }
-
-    buildZoomer()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups(svg: any) {
     const marginLeft = obj.margin.left
@@ -103,6 +78,25 @@ export default function () {
   //     }
   //   }
 
+  function toExport(htmlSelection: any) {
+    obj.mapWidth = obj.width - obj.margin.left - obj.margin.right
+    obj.mapHeight = obj.height - obj.margin.top - obj.margin.bottom
+
+    buildSVG(htmlSelection.node())
+    // buildSVG(html_selection)
+    buildProjector()
+
+    plots.forEach((plot: any) => {
+      plot(obj)
+    })
+
+    if (obj.showMargins) {
+      obj.svg.style('background-color', 'rgba(255, 0, 0, .2)')
+    }
+
+    buildZoomer()
+  }
+
   const chart: any = toExport
 
   function generateAccessor(attr: any) {
@@ -118,33 +112,33 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  toExport.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? toExport : value
-  }
+  // toExport.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? toExport : value
+  // }
 
   toExport.attr = function () {
     return obj
   }
 
-  toExport.plot = function (_x: any) {
-    if (Number.isInteger(_x) && plots.length > 0) {
-      return plots[_x]
+  toExport.plot = function (x: any) {
+    if (Number.isInteger(x) && plots.length > 0) {
+      return plots[x]
     }
-    if (typeof _x === 'string') {
-      const labels = plots.filter((elem: any) => elem.tag() === _x)
+    if (typeof x === 'string') {
+      const labels = plots.filter((elem: any) => elem.tag() === x)
       if (labels.length > 0) {
         return labels[0]
       }
       return null
     }
-    plots.push(_x)
+    plots.push(x)
     return toExport
   }
 

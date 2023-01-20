@@ -1,3 +1,4 @@
+/* eslint-disable prefer-rest-params */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
 import * as d3Array from 'd3-array'
@@ -9,7 +10,8 @@ const publicAttrs = {
   ...barsAttrs,
 }
 
-function histogram_scaling() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function histogramScaling() {
   let useDensity = false
   let totalCounts = 0
   let ys: number[] = []
@@ -27,62 +29,62 @@ function histogram_scaling() {
     return x.length
   }
 
-  const callable_obj: any = toExport
+  const callableObj: any = toExport
 
-  callable_obj.density = function (_x: boolean) {
+  callableObj.density = function (_x: boolean) {
     if (arguments) {
       useDensity = _x
-      return callable_obj
+      return callableObj
     }
     return useDensity
   }
 
-  callable_obj.counts = function (_x: number) {
+  callableObj.counts = function (_x: number) {
     if (arguments) {
       totalCounts = _x
-      return callable_obj
+      return callableObj
     }
     return totalCounts
   }
 
-  callable_obj.domain = function (_x: any) {
+  callableObj.domain = function (_x: any) {
     if (arguments) {
       domain = _x
-      return callable_obj
+      return callableObj
     }
     return domain
   }
 
-  callable_obj.ys = function (_x: number[]) {
+  callableObj.ys = function (_x: number[]) {
     if (arguments) {
       ys = _x
-      return callable_obj
+      return callableObj
     }
     return ys
   }
 
-  callable_obj.bins = function (_x: number) {
+  callableObj.bins = function (_x: number) {
     if (arguments) {
       bins = _x
-      return callable_obj
+      return callableObj
     }
     return bins
   }
 
-  callable_obj.binWidth = function (_x: number) {
+  callableObj.binWidth = function (_x: number) {
     if (arguments) {
       binWidth = _x
-      return callable_obj
+      return callableObj
     }
     return binWidth
   }
 
-  return callable_obj
+  return callableObj
 }
 
 export default function () {
   // console.log('BarChart/index:21: what is public attrs: ', publicAttributes)
-  let _container: any = null
+  let container: any = null
 
   const obj: any = JSON.parse(JSON.stringify(publicAttrs))
 
@@ -94,15 +96,9 @@ export default function () {
     'customMouseClick'
   )
 
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
-
   function buildContainerGroups() {
     // console.log('what is container when build groups: ', _container)
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.chart-group')
     const children = chartGroup.selectAll(function () {
@@ -121,11 +117,11 @@ export default function () {
   }
 
   function makeBins(arr: number[], bins: number) {
-    const { xs } = obj
-    const { xScale } = _container
-    const extents: number[] = d3.extent(arr)
-    const range: number = extents[1] - extents[0]
-    const binSize: number = range / bins
+    // const { xs } = obj
+    const { xScale } = container
+    // const extents: number[] = d3.extent(arr)
+    // const range: number = extents[1] - extents[0]
+    // const binSize: number = range / bins
 
     const binFtn = d3Array.bin().domain(xScale.domain()).thresholds(bins)
 
@@ -140,15 +136,15 @@ export default function () {
 
   function drawData() {
     const { ys } = obj
-    const { xs } = obj
-    const { xScale } = _container
-    const { yScale } = _container
-    const { chartHeight } = _container
-    const { chartWidth } = _container
-    const { svg } = _container
+    // const { xs } = obj
+    const { xScale } = container
+    const { yScale } = container
+    const { chartHeight } = container
+    // const { chartWidth } = container
+    const { svg } = container
     const { bins } = obj
     const { alpha } = obj
-    const normalize = false
+    // const normalize = false
     const useDensity: boolean = obj.density
 
     const chartGroup = svg.select(`.${obj.plotID}`)
@@ -198,7 +194,7 @@ export default function () {
         // console.log('what is x1 / domain / range / xscaled x: ', x.x0, xScale.domain(), xScale.range(), xScale(x.x0))
         xScale(x.x0)
       )
-      .attr('y', (x: any, idx: number) => {
+      .attr('y', (x: any) => {
         let yPos = x.length
         if (useDensity) {
           yPos = x.length / (ys.length * (x.x1 - x.x0))
@@ -210,7 +206,7 @@ export default function () {
         const width = xScale(x.x1) - xScale(x.x0)
         return width
       })
-      .attr('height', (x: any, idx: number) => {
+      .attr('height', (x: any) => {
         // to compute density so that area under curve integrates to 1
         // density = x.length / total-no-counts * bin-width
         let height = x.length
@@ -222,7 +218,7 @@ export default function () {
         height = chartHeight - yScale(height)
         return height
       })
-      .attr('fill', ({ value }: any) => 'red')
+      .attr('fill', () => 'red')
       .style('opacity', alpha)
       .on('mouseover', function (d: any) {
         d3.select(this).style('cursor', 'pointer')
@@ -249,12 +245,18 @@ export default function () {
     // console.log('what is the sum now: ', sum)
   }
 
-  const callable_obj: any = plot
-
-  callable_obj.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
   }
+
+  const callableObj: any = plot
+
+  // callableObj.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
   /**
    * Gets or Sets the text of the yAxisLabel on the chart
@@ -270,28 +272,17 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.extent = function () {
-    const x_extent = d3.extent(obj.xs, (elem: any) => elem)
-
-    const y_extent = d3.extent(obj.ys, (elem: any) => elem)
-
-    return {
-      x: x_extent,
-      y: y_extent,
-    }
-  }
-
-  return callable_obj
+  return callableObj
 }

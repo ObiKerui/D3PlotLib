@@ -1,4 +1,3 @@
-
 export default `
 async function createHeartbeatPlot(ref: any) {
     let csvdata = await d3.csv('assets/ecg_data.csv')

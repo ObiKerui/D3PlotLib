@@ -132,12 +132,6 @@ export default function () {
     return accessor
   }
 
-  // generate the chart attributes
-  // for (const attr in obj) {
-  //   if (!callableObj[attr] && obj.hasOwnProperty(attr)) {
-  //     callableObj[attr] = generateAccessor(attr)
-  //   }
-  // }
   Object.keys(obj).forEach((attr: any) => {
     if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       callableObj[attr] = generateAccessor(attr)

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
-import * as d3Dispatch from 'd3-dispatch'
+import * as d3Geo from 'd3-geo'
+// import * as d3Dispatch from 'd3-dispatch'
 import * as L from 'leaflet'
 import { plotAttrs } from '../MapAttribs'
 
@@ -10,25 +11,19 @@ const publicAttributes = {
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(publicAttributes))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   // Building Blocks
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.map-group')
     const children = chartGroup.selectAll(function () {
@@ -45,6 +40,7 @@ export default function () {
     chartGroup.append('g').classed(`${obj.plotID}`, true)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function getPathCreator(map: any) {
     // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
     const projectPoint = function (x: number, y: number) {
@@ -53,18 +49,18 @@ export default function () {
     }
 
     // Use d3's custom geo transform method to implement the above
-    const projection = d3.geoTransform({ point: projectPoint })
-    const pathCreator = d3.geoPath().projection(projection)
+    const projection = d3Geo.geoTransform({ point: projectPoint })
+    const pathCreator = d3Geo.geoPath().projection(projection)
 
     return pathCreator
   }
 
   function drawData() {
     // let map = _container.map
-    const { svg } = _container
+    const { svg } = container
     // let pathCreator = getPathCreator(map)
     const { data } = obj
-    const pathCreator = _container.projector
+    const pathCreator = container.projector
 
     const styling = {
       stroke: 'brown',
@@ -89,14 +85,20 @@ export default function () {
     markers = markers.merge(enterGroup)
 
     markers
-      .attr('d', (d: any, i: number, n: any) => d3.symbol().type(d3.symbolSquare).size(45)())
-      .attr('transform', (d: any, i: number, n: any) => {
+      .attr('d', () => d3.symbol().type(d3.symbolSquare).size(45)())
+      .attr('transform', (d: any) => {
         const latlng = [+d.long, +d.lat]
         const proj = pathCreator.projection()
         const res = proj(latlng)
         return `translate(${res[0]}, ${res[1]})`
       })
-      .styles(styling)
+      .style(styling)
+  }
+
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
   }
 
   const chart: any = plot
@@ -114,11 +116,11 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)
     }
-  }
+  })
   plot.attr = function () {
     return obj
   }

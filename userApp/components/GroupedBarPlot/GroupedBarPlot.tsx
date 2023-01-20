@@ -9,12 +9,12 @@ import content from './create'
 async function createGroupedBarPlot(ref: HTMLElement) {
   const csvdata = await d3.csv('assets/data_stacked.csv')
 
-  const labels = csvdata.columns
-  const subgroups = ['banana', 'poacee', 'sorgho']
+  // const labels = csvdata.columns
+  // const subgroups = ['banana', 'poacee', 'sorgho']
 
-  const groups = d3.map(csvdata, (d: any) => d.group)
+  const groups = csvdata.map((d: any) => d.group)
 
-  const groupKeys = groups.keys()
+  // const groupKeys = groups.keys()
 
   const scaler = d3PlotLib
     .Scaler()

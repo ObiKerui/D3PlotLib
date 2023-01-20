@@ -4,7 +4,6 @@ import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 
 import CodeBlock from '../CodeBlock'
-import np from '../NumpyClone'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
@@ -39,7 +38,7 @@ async function createCandleStick(ref: any) {
 
   const scaler = d3PlotLib
     .Scaler()
-    .xScale((_xs: Iterable<Date>) => d3.scaleTime().domain(d3.extent(_xs)))
+    .xScale((_xs: Date[]) => d3.scaleTime().domain(d3.extent(_xs)))
     .yScale(() => d3.scaleLinear().domain([17000, 18000]))
 
   const candlestickPlot = d3PlotLib.CandlestickPlot().xs(xs).ys(ys)

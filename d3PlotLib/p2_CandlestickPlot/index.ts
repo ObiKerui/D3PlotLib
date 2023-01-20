@@ -6,8 +6,8 @@ import { plotAttrs } from '../ChartAttribs'
 const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
-  let obj: any = JSON.parse(JSON.stringify(plotAttrs))
-  let _container: any = null
+  const obj: any = JSON.parse(JSON.stringify(plotAttrs))
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
   const dispatcher = d3Dispatch.dispatch(
@@ -17,21 +17,15 @@ export default function () {
     'customMouseClick'
   )
 
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
-
   function buildContainerGroups() {
-    let svg = _container.svg
+    const { svg } = container
 
-    let chartGroup = svg.select('g.chart-group')
-    let children = chartGroup.selectAll(function () {
+    const chartGroup = svg.select('g.chart-group')
+    const children = chartGroup.selectAll(function () {
       return this.childNodes
     })
 
-    let existingElements = children.filter(`g.${obj.plotID}`)
+    const existingElements = children.filter(`g.${obj.plotID}`)
     if (existingElements.size() > 0) {
       return
     }
@@ -43,25 +37,25 @@ export default function () {
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
-    let index = obj.index % colorScheme.length
+    const index = obj.index % colorScheme.length
     obj.colour = colorScheme[index]
   }
 
-  function buildDataSet(xs : any, ys : any, keys : string[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function buildDataSet(xs: any, ys: any, keys: string[]) {
+    const nbrRows = ys.length
+    const nbrCols = ys[0].length
+    const dataset = []
 
-    let nbrRows = ys.length
-    let nbrCols = ys[0].length   
-    let dataset = []
-      
-    for(let col = 0; col < nbrCols; col++) {
-      let column_obj : any = {}
+    for (let col = 0; col < nbrCols; col += 1) {
+      const columnObj: any = {}
 
-      for(let row = 0; row < nbrRows; row++) {
-        let row_elem = ys[row]
-        let label : string = keys[row]
-        column_obj[label as keyof typeof column_obj] = row_elem[col]
+      for (let row = 0; row < nbrRows; row += 1) {
+        const rowElem = ys[row]
+        const label: string = keys[row]
+        columnObj[label as keyof typeof columnObj] = rowElem[col]
       }
-      dataset.push(column_obj)
+      dataset.push(columnObj)
     }
 
     // console.log('what dataset did we build? ', arr)
@@ -69,13 +63,13 @@ export default function () {
   }
 
   function drawData() {
-    let xs = obj.xs
-    let ys = obj.ys
-    let labels = obj.labels
-    let index = obj.index
-    let strokeColour = obj.colour
-    let xScale = _container.xScale
-    let yScale = _container.yScale
+    const { xs } = obj
+    const { ys } = obj
+    // const { labels } = obj
+    // const { index } = obj
+    // const strokeColour = obj.colour
+    const { xScale } = container
+    const { yScale } = container
 
     // console.log('stacked area draw : obj / xs / ys / test xscale / test yscale ', obj, xs, ys, xScale(xs[0]), yScale(ys[0]))
 
@@ -88,89 +82,88 @@ export default function () {
     //   lineEffect = 'stroke-dasharray'
     // }
 
-    let svg = _container.svg
-    let chartGroup = svg.select(`.${obj.plotID}`)
+    const { svg } = container
+    const chartGroup = svg.select(`.${obj.plotID}`)
 
     // select all rect in svg.chart-group with the class bar
-    let bars = chartGroup.selectAll(".bar")
-    .data(ys)
+    let bars = chartGroup.selectAll('.bar').data(ys)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
-    bars.exit()
-    .style("opacity", 0)
-    .remove()
+    bars.exit().style('opacity', 0).remove()
 
     // Enter - add the shapes to this data point
-    let enterGroup = bars
-      .enter()
-      .append("rect")
-      .classed("bar", true)
+    const enterGroup = bars.enter().append('rect').classed('bar', true)
 
-    // join the new data points with existing 
+    // join the new data points with existing
     bars = bars.merge(enterGroup)
 
     // now position and colour what exists on the dom
-    bars.attr("x", (d : any, idx: number) => {
-        return xScale(xs[idx])
-    })
-      .attr("y", ({ open, close } : any) => yScale(Math.max(open, close)))
-      .attr("width", 10)
-      .attr("height", ({ open, close } : any) => {
-        if (open == close) {
-            return 1
+    bars
+      .attr('x', (d: any, idx: number) => xScale(xs[idx]))
+      .attr('y', ({ open, close }: any) => yScale(Math.max(open, close)))
+      .attr('width', 10)
+      .attr('height', ({ open, close }: any) => {
+        if (open === close) {
+          return 1
         }
-        let height = yScale(Math.min(open, close)) - yScale(Math.max(open, close))
-        return height       
+        const height = yScale(Math.min(open, close)) - yScale(Math.max(open, close))
+        return height
       })
-      .attr("fill", ({ open, close } : any) => {
-        return (open === close) ? "silver" : (open > close) ? "red" : "green"   
+      .attr('fill', ({ open, close }: any) =>
+        // eslint-disable-next-line no-nested-ternary
+        open === close ? 'silver' : open > close ? 'red' : 'green'
+      )
+      .on('mouseover', function (d: any) {
+        d3.select(this).style('cursor', 'pointer')
+        dispatcher.call('customMouseOver', this, d)
       })
-      .on("mouseover", function(d : any) {
-        d3.select(this).style("cursor", "pointer")
-        dispatcher.call("customMouseOver", this, d)
+      .on('mousemove', function (d: any) {
+        dispatcher.call('customMouseMove', this, d)
       })
-      .on("mousemove", function(d : any) {
-        dispatcher.call("customMouseMove", this, d)
+      .on('mouseout', function (d: any) {
+        dispatcher.call('customMouseOut', this, d)
       })
-      .on("mouseout", function(d : any) {
-        dispatcher.call("customMouseOut", this, d)
-      })
-      .on("click", function(d : any) {
-        dispatcher.call("customMouseClick", this, d)
+      .on('click', function (d: any) {
+        dispatcher.call('customMouseClick', this, d)
       })
 
     // Select all lines in svg.chart-group with the class sticks
-    let sticks = chartGroup.selectAll(".sticks")
-    .data(ys)          
+    let sticks = chartGroup.selectAll('.sticks').data(ys)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
-    sticks.exit()
-    .style("opacity", 0)
-    .remove()
+    sticks.exit().style('opacity', 0).remove()
 
-    // Enter - add the shapes to this data point    
-    let sticksEnterGroup = sticks.enter()
-    .append("line")
-    .attr("class", "sticks")
+    // Enter - add the shapes to this data point
+    const sticksEnterGroup = sticks.enter().append('line').attr('class', 'sticks')
 
-    // join the new data points with existing 
+    // join the new data points with existing
     sticks = sticks.merge(sticksEnterGroup)
-      
+
     // now position and colour what exists on the dom
-    sticks.attr("x1", (d : any) => {
-          let startPoint = xScale(d.date); 
-          return startPoint + (10 / 2);
+    sticks
+      .attr('x1', (d: any) => {
+        const startPoint = xScale(d.date)
+        return startPoint + 10 / 2
       })
-      .attr("x2", (d : any) => {
-          let startPoint : number = xScale(d.date);
-          return startPoint + (10 / 2);
+      .attr('x2', (d: any) => {
+        const startPoint: number = xScale(d.date)
+        return startPoint + 10 / 2
       })
-      .attr("y1", (d : any) => yScale(d.high))
-      .attr("y2", (d : any) => yScale(d.low))
-      .attr("stroke", (d : any) => (d.open === d.close) ? "white" : (d.open > d.close) ? "red" : "green"); 
+      .attr('y1', (d: any) => yScale(d.high))
+      .attr('y2', (d: any) => yScale(d.low))
+      .attr('stroke', (d: any) =>
+        // eslint-disable-next-line no-nested-ternary
+        d.open === d.close ? 'white' : d.open > d.close ? 'red' : 'green'
+      )
   }
 
-  let callable_obj: any = plot
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
+  }
+
+  const callableObj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -179,26 +172,26 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.on = function (_x: any) {
-    let value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
-  }
+  // callableObj.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
-  callable_obj.attr = function () {
+  callableObj.attr = function () {
     return obj
   }
 
-  return callable_obj
+  return callableObj
 }

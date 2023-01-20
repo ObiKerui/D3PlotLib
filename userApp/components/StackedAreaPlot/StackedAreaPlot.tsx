@@ -4,7 +4,6 @@ import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 
 import CodeBlock from '../CodeBlock'
-import np from '../NumpyClone'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
@@ -25,7 +24,7 @@ function createStackedArea(ref: any) {
 
   const scaler = d3PlotLib
     .Scaler()
-    .xScale((xs: Iterable<Date>) => d3.scaleTime().domain(d3.extent(xs)))
+    .xScale((xs: Date[]) => d3.scaleTime().domain(d3.extent(xs)))
     .yScale(() => d3.scaleLinear().domain([0, 25]))
 
   const stackplot = d3PlotLib.StackedArea().xs(x).ys([y1, y2, y3]).labels(labels)

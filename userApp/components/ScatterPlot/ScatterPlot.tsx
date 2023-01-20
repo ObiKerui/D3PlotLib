@@ -16,11 +16,11 @@ const np = {
     return arr
   },
 
-  mean(arr: Iterable<d3.Numeric>) {
+  mean(arr: ArrayLike<d3.Numeric>) {
     return d3.mean(arr)
   },
 
-  std(arr: Iterable<d3.Numeric>) {
+  std(arr: ArrayLike<d3.Numeric>) {
     return d3.deviation(arr)
   },
 
@@ -62,9 +62,9 @@ async function createScatterPlot(ref: HTMLDivElement) {
 
   const scaler = d3PlotLib
     .Scaler()
-    .xScale((_xs: Iterable<d3.Numeric>) => d3.scaleLinear().domain(d3.extent(_xs)))
-    .yScale((_ys: Iterable<d3.Numeric>) => {
-      const merged: Iterable<d3.Numeric> = [].concat([], ..._ys)
+    .xScale((_xs: number[]) => d3.scaleLinear().domain(d3.extent(_xs)))
+    .yScale((_ys: number[]) => {
+      const merged: number[] = [].concat([], ..._ys)
       return d3.scaleLinear().domain(d3.extent(merged))
     })
 

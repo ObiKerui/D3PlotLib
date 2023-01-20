@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 
 import CodeBlock from '../CodeBlock'
-import np from '../NumpyClone'
+// import np from '../NumpyClone'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
@@ -38,12 +38,10 @@ function createStackedBar(ref: any) {
 
 export default function () {
   const ref = useRef(null)
-  let plotObj: any = null
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    const obj = await createStackedBar(currRef)
-    plotObj = obj
+    await createStackedBar(currRef)
   })
 
   return (

@@ -1,69 +1,67 @@
-// p2_devZoom/index.ts
-'use strict'
-
-declare const d3: any
-declare const moment: any
-declare const L: any
-declare const $: any
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as d3 from 'd3'
+// import * as d3Dispatch from 'd3-dispatch'
 
 export default function () {
-    let obj: any = {}
-    let zoomDetails: any = null
+  const obj: any = {}
+  let zoomDetails: any = null
 
-    //initialize throttlePause variable outside throttle function
-    let throttlePause: boolean;
- 
-    const throttle = (callback: any, time: number) => {
-        if (throttlePause) return;
-    
-        //set throttlePause to true after the if condition. This allows the function to be run once
-        throttlePause = true;
-    
-        //setTimeout runs the callback within the specified time
-        setTimeout(() => {
-            callback()
-            
-            //throttlePause is set to false once the function has been called, allowing the throttle function to loop
-            throttlePause = false
-        }, time)
-    }  
+  // initialize throttlePause variable outside throttle function
+  let throttlePause: boolean
 
-  function toExport(containerAttrs: any, plottables: any) {
+  const throttle = (callback: any, time: number) => {
+    if (throttlePause) return
 
-    let mapWidth = containerAttrs.mapWidth
-    let mapHeight = containerAttrs.mapHeight
-    let mapGroup = containerAttrs.svg.select("g.map-group")
-    let metaGroup = containerAttrs.svg.select("g.metadata-group")
+    // set throttlePause to true after the if condition. This allows the function to be run once
+    throttlePause = true
+
+    // setTimeout runs the callback within the specified time
+    setTimeout(() => {
+      callback()
+
+      // throttlePause is set to false once the function has been called, allowing the throttle function to loop
+      throttlePause = false
+    }, time)
+  }
+
+  function toExport(containerAttrs: any) {
+    const { mapWidth } = containerAttrs
+    const { mapHeight } = containerAttrs
+    const mapGroup = containerAttrs.svg.select('g.map-group')
+    const metaGroup = containerAttrs.svg.select('g.metadata-group')
+
+    function handleZoom() {
+      const { transform } = d3.event
+      throttle(() => {
+        // console.log('what is transform: ', transform)
+        mapGroup.attr('transform', transform)
+      }, 10)
+    }
 
     // let zoomDetails = metaGroup.select("g.zoom-details")
     // console.log('what are zoom details: ', zoomDetails)
 
-    if(zoomDetails === null) {
-        function handleZoom(a: any, b: any, e: any) {
-            let transform = d3.event.transform
-            throttle(() => {
-                // console.log('what is transform: ', transform)
-                mapGroup.attr('transform', transform)      
-            }, 10)
-        }
-
-        let zoom = d3.zoom()
+    if (zoomDetails === null) {
+      const zoom = d3
+        .zoom()
         .on('zoom', handleZoom)
         .scaleExtent([1, 5])
-        .translateExtent([[0, 0], [mapWidth, mapHeight]])
+        .translateExtent([
+          [0, 0],
+          [mapWidth, mapHeight],
+        ])
 
-        console.log('what is map group here: ', mapGroup)
-        mapGroup.call(zoom)    
+      // console.log('what is map group here: ', mapGroup)
+      mapGroup.call(zoom)
 
-        console.log('zoom params: ', containerAttrs, plottables, mapGroup)
-        metaGroup.append("g")
-        .classed("zoom-details", true)
+      // console.log('zoom params: ', containerAttrs, plottables, mapGroup)
+      metaGroup.append('g').classed('zoom-details', true)
 
-        zoomDetails = {}
+      zoomDetails = {}
     }
   }
 
-  let callableObj: any = toExport
+  const callableObj: any = toExport
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -78,11 +76,11 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
-    if (!callableObj[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
   callableObj.attr = function () {
     return obj

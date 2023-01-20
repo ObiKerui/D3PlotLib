@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Container/index.ts
 import * as d3 from 'd3'
-import { dispatch } from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 
 import { scaleAttrs, containerAttrs, axisAttrs } from '../ChartAttribs'
 
@@ -19,38 +20,12 @@ export default function () {
   // console.log('P2 Container: what is public attrs: ', obj)
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function toExport(html_selection: any) {
-    obj.chartWidth = obj.width - obj.margin.left - obj.margin.right
-    obj.chartHeight = obj.height - obj.margin.top - obj.margin.bottom
-
-    buildSVG(html_selection.node())
-    buildScales()
-    buildAxes()
-    buildGrid()
-
-    // buildMouseInteractor()
-
-    plots.forEach((plot: any) => {
-      plot(obj)
-    })
-
-    drawGrid()
-    drawAxes()
-    drawAxisLabels()
-
-    drawLegends()
-
-    if (obj.showMargins && obj.svg) {
-      obj.svg.style('background-color', 'rgba(255, 0, 0, .2)')
-    }
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildScales() {
     const scaler = obj.scale == null ? null : obj.scale
@@ -58,29 +33,34 @@ export default function () {
   }
 
   function buildAxes() {
-    obj.xAxis = obj.yAxis = null
+    obj.xAxis = null
+    obj.yAxis = null
+
     if (obj.xScale == null || obj.yScale == null) {
       return
     }
 
     obj.xAxis = d3.axisBottom(obj.xScale)
 
-    if (obj.yAxisPosition == 'right') {
+    if (obj.yAxisPosition === 'right') {
       obj.yAxis = d3.axisRight(obj.yScale)
     } else {
       obj.yAxis = d3.axisLeft(obj.yScale)
     }
 
     obj.yAxis.ticks(10, '%').tickFormat((d: any) => {
-      if (d / 1000 >= 1) {
-        d = `${d / 1000}K`
+      let toRet = d
+      if (toRet / 1000 >= 1) {
+        toRet = `${d / 1000}K`
       }
-      return d
+      return toRet
     })
   }
 
   function buildGrid() {
-    obj.xGrid = obj.yGrid = null
+    obj.xGrid = null
+    obj.yGrid = null
+
     if (obj.xScale == null || obj.yScale == null) {
       return
     }
@@ -152,18 +132,18 @@ export default function () {
     }
 
     const yAxisTextRotation = obj.yAxisText.rotation ?? 0
-    const yAxisTextAnchor = 'end'
-    const yAxisTextDX = '0em'
-    let yAxisTextDY = '0em'
+    // const yAxisTextAnchor = 'end'
+    // const yAxisTextDX = '0em'
+    // let yAxisTextDY = '0em'
 
     if (yAxisTextRotation !== 0) {
       // yAxisTextAnchor = "start"
       // yAxisTextDX = ".8em"
-      yAxisTextDY = '.15em'
+      // yAxisTextDY = '.15em'
     }
 
     let yAxisShift = 0
-    if (obj.yAxisPosition == 'right') {
+    if (obj.yAxisPosition === 'right') {
       yAxisShift = obj.chartWidth + 4
     }
 
@@ -202,7 +182,7 @@ export default function () {
 
   function drawGrid() {
     let yAxisShift = 0
-    if (obj.yAxisPosition == 'right') {
+    if (obj.yAxisPosition === 'right') {
       yAxisShift = obj.chartWidth + 4
     }
 
@@ -238,7 +218,7 @@ export default function () {
     // .text("hello")
 
     let yAxisShift = 0
-    if (obj.yAxisPosition == 'right') {
+    if (obj.yAxisPosition === 'right') {
       yAxisShift = obj.chartWidth + 80
     }
 
@@ -283,6 +263,32 @@ export default function () {
     obj.legend(obj, plots)
   }
 
+  function toExport(htmlSelection: any) {
+    obj.chartWidth = obj.width - obj.margin.left - obj.margin.right
+    obj.chartHeight = obj.height - obj.margin.top - obj.margin.bottom
+
+    buildSVG(htmlSelection.node())
+    buildScales()
+    buildAxes()
+    buildGrid()
+
+    // buildMouseInteractor()
+
+    plots.forEach((plot: any) => {
+      plot(obj)
+    })
+
+    drawGrid()
+    drawAxes()
+    drawAxisLabels()
+
+    drawLegends()
+
+    if (obj.showMargins && obj.svg) {
+      obj.svg.style('background-color', 'rgba(255, 0, 0, .2)')
+    }
+  }
+
   const chart: any = toExport
 
   function generateAccessor(attr: any) {
@@ -298,33 +304,33 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  toExport.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? toExport : value
-  }
+  // toExport.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? toExport : value
+  // }
 
   toExport.attr = function () {
     return obj
   }
 
-  toExport.plot = function (_x: any) {
-    if (Number.isInteger(_x) && plots.length > 0) {
-      return plots[_x]
+  toExport.plot = function (x: any) {
+    if (Number.isInteger(x) && plots.length > 0) {
+      return plots[x]
     }
-    if (typeof _x === 'string') {
-      const labels = plots.filter((elem: any) => elem.tag() === _x)
+    if (typeof x === 'string') {
+      const labels = plots.filter((elem: any) => elem.tag() === x)
       if (labels.length > 0) {
         return labels[0]
       }
       return null
     }
-    plots.push(_x)
+    plots.push(x)
     return toExport
   }
 

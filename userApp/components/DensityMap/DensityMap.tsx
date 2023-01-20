@@ -6,7 +6,7 @@ import CodeBlock from '../CodeBlock'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
-declare const topojson: any
+// declare const topojson: any
 
 async function createDensityMap(ref: any) {
   // create the states geojson
@@ -44,11 +44,11 @@ async function createDensityMap(ref: any) {
   countiesGeojsonCopy.features = filteredCounties
 
   // match up the unemployment rate with the county
-  for (let i = 0; i < countiesGeojsonCopy.features.length; i++) {
+  for (let i = 0; i < countiesGeojsonCopy.features.length; i += 1) {
     const county = countiesGeojsonCopy.features[i]
     const countyGeoID = county.properties.GEOID
     let j = 0
-    for (; j < unemploymentCsv.length; j++) {
+    for (; j < unemploymentCsv.length; j += 1) {
       const unemploymentInCounty = unemploymentCsv[j]
       const { id } = unemploymentInCounty
       const { rate } = unemploymentInCounty

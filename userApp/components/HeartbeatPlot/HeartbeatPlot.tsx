@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 
 import CodeBlock from '../CodeBlock'
-import HeatmapPlot from '../HeatmapPlot/HeatmapPlot'
+// import HeatmapPlot from '../HeatmapPlot/HeatmapPlot'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
@@ -19,7 +19,7 @@ async function createHeartbeatPlot(ref: HTMLDivElement) {
 
   const ys2 = csvdata.map((elem: any) => +elem.ecg2)
 
-  const makeXScale = (_xs: Iterable<d3.Numeric>) => d3.scaleLinear().domain(d3.extent(_xs))
+  const makeXScale = (_xs: number[]) => d3.scaleLinear().domain(d3.extent(_xs))
 
   const makeYScale = (ys: []) => {
     const merged = [].concat([], ...ys)
@@ -62,16 +62,16 @@ async function updatePlot(plotObj: any) {
 
   // if(timer === null || timer === undefined) {
   //   timer = setInterval(() => {
-  let ys1 = plotObj.plot('plot1').ys()
-  let ys2 = plotObj.plot('plot2').ys()
-  ys1 = ys1[0]
-  ys2 = ys2[0]
+  const ys1 = plotObj.plot('plot1').ys()
+  const ys2 = plotObj.plot('plot2').ys()
+  const [ys1Elem] = ys1
+  const [ys2Elem] = ys2
 
-  let first = ys1.shift()
-  ys1.push(first)
+  let first = ys1Elem.shift()
+  ys1Elem.push(first)
 
-  first = ys2.shift()
-  ys2.push(first)
+  first = ys2Elem.shift()
+  ys2Elem.push(first)
 
   plotObj.plot('plot1').ys([ys1])
   plotObj.plot('plot2').ys([ys2])
@@ -119,7 +119,7 @@ export default function () {
       <div className="plot plot--container">
         <h3 id="animated-ecg-plot">Heartbeat</h3>
         <div className="plot--controls">
-          <button className="btn btn-primary" onClick={() => handleClick()}>
+          <button type="button" className="btn btn-primary" onClick={() => handleClick()}>
             {buttonText}
           </button>
         </div>

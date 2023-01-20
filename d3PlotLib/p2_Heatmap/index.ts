@@ -41,6 +41,7 @@ export default function () {
     obj.colours = colorScheme
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function prepareData() {
     // check ys for 2d array
     obj.ys = Array.isArray(obj.ys[0]) ? obj.ys : [obj.ys]

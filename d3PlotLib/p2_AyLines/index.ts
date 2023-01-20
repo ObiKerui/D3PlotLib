@@ -72,7 +72,7 @@ export default function () {
 
   function drawData() {
     const { ys } = obj
-    const { xs } = obj
+    // const { xs } = obj
     const strokeColour = obj.colour
     let { xScale } = container
     const { yScale } = container
@@ -94,7 +94,7 @@ export default function () {
 
     xScale = d3
       .scaleLinear()
-      .domain(d3.extent(xScale.domain() as Iterable<d3.Numeric>))
+      .domain(d3.extent(xScale.domain() as number[]))
       .range(xScale.range())
 
     // console.log('x start / x end: ', xStart, xEnd, xScale.domain(), xScale.range())
@@ -122,13 +122,13 @@ export default function () {
 
     // now position and colour what exists on the dom
     lines
-      .attr('x1', (d: any, i: any) => xScale(xStart))
-      .attr('x2', (d: any, i: any) => xScale(xEnd))
-      .attr('y1', (d: any, i: any) =>
+      .attr('x1', () => xScale(xStart))
+      .attr('x2', () => xScale(xEnd))
+      .attr('y1', (d: any) =>
         // console.log('what is y1 : ', d, i)
         yScale(d)
       )
-      .attr('y2', (d: any, i: any) => yScale(d))
+      .attr('y2', (d: any) => yScale(d))
       .attr('clip-path', `url(#${obj.clipPathId})`)
       .attr('stroke', strokeColour)
       .style('opacity', alpha)
@@ -181,10 +181,10 @@ export default function () {
     }
   })
 
-  callableObj.on = function () {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callableObj : value
-  }
+  // callableObj.on = function () {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
   callableObj.attr = function () {
     return obj

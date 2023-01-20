@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as d3 from 'd3'
+import * as d3Geo from 'd3-geo'
 // import * as d3Dispatch from 'd3-dispatch'
 import { plotAttrs } from '../MapAttribs'
 
@@ -52,10 +52,11 @@ export default function () {
   //     return pathCreator;
   //   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function getPathCreator(states: any) {
     // how it's done in the book example...
-    const projection = d3.geoMercator()
-    const pathCreator = d3.geoPath().projection(projection)
+    const projection = d3Geo.geoMercator()
+    const pathCreator = d3Geo.geoPath().projection(projection)
     const width = container.mapWidth
     const height = container.mapHeight
 
@@ -149,7 +150,7 @@ export default function () {
         const result = pathCreator(param)
         return result
       })
-      .styles((elem: any) => {
+      .style((elem: any) => {
         if (obj.onStyle) {
           return obj.onStyle({ elem })
         }
@@ -177,12 +178,6 @@ export default function () {
     return accessor
   }
 
-  // generate the chart attributes
-  // for (const attr in obj) {
-  //   if (!chart[attr] && obj.hasOwnProperty(attr)) {
-  //     chart[attr] = generateAccessor(attr)
-  //   }
-  // }
   Object.keys(obj).forEach((attr: any) => {
     if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)

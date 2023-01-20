@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
-import { dispatch } from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 import * as L from 'leaflet'
 import { plotAttrs } from '../MapAttribs'
 
@@ -9,25 +10,19 @@ const publicAttributes = {
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(publicAttributes))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   // Building Blocks
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.map-group')
     const children = chartGroup.selectAll(function () {
@@ -59,8 +54,8 @@ export default function () {
   }
 
   function drawData() {
-    const { map } = _container
-    const { svg } = _container
+    const { map } = container
+    const { svg } = container
     const pathCreator = getPathCreator(map)
     const { geojson } = obj
     const zoomLevel: number = map.getZoom()
@@ -94,12 +89,18 @@ export default function () {
         const result = pathCreator(param)
         return result
       })
-      .styles((elem: any) => {
+      .style((elem: any) => {
         if (obj.onStyle) {
           return obj.onStyle({ elem, zoomLevel })
         }
         return styling
       })
+  }
+
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
   }
 
   const chart: any = plot
@@ -117,11 +118,11 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       chart[attr] = generateAccessor(attr)
     }
-  }
+  })
   plot.attr = function () {
     return obj
   }

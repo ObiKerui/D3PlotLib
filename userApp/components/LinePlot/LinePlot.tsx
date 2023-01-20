@@ -14,7 +14,7 @@ function createLinePlot(ref: HTMLDivElement) {
   const ys2 = [2, 3, 1, 2, 3]
   const ys3 = [4, 5, 2, 1, 1]
 
-  const makeXScale = (_xs: Iterable<d3.Numeric>) => d3.scaleLinear().domain(d3.extent(_xs))
+  const makeXScale = (_xs: number[]) => d3.scaleLinear().domain(d3.extent(_xs))
 
   const makeYScale = (ys: []) => {
     const merged = [].concat([], ...ys)
