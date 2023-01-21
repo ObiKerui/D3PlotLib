@@ -1,15 +1,16 @@
-import React, { useRef, useEffect, useLayoutEffect } from 'react'
-declare const d3: any;
-declare const _: any;
-declare const window: any;
+import { useEffect } from 'react'
 
-export default function(functionCall: any) {
+declare const _: any
+
+type OnResizeFunc = () => void
+
+export default function (functionCall: OnResizeFunc) {
   useEffect(() => {
     const handleResize = _.debounce(functionCall, 500)
     functionCall()
     window.addEventListener('resize', handleResize)
     return () => {
-      window.removeEventListener('resize', handleResize)  
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 }

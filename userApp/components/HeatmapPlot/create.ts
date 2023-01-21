@@ -1,4 +1,3 @@
-
 export default `
 let csvresult = await d3.csv('assets/heatmap.csv')
   

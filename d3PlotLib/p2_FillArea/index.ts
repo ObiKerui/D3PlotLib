@@ -1,42 +1,34 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // p2_FillArea/index.ts
-'use strict'
+import * as d3 from 'd3'
+// import * as d3Dispatch from 'd3-dispatch'
+
 import { plotAttrs } from '../ChartAttribs'
 import interpolator from './interpolator'
-
-declare const d3: any
-declare const moment: any
-declare const L: any
-declare const $: any
 
 const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
-  let obj: any = JSON.parse(JSON.stringify(plotAttrs))
-  let _container: any = null
+  const obj: any = JSON.parse(JSON.stringify(plotAttrs))
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
-    let svg = _container.svg
+    const { svg } = container
 
-    let chartGroup = svg.select('g.chart-group')
-    let children = chartGroup.selectAll(function () {
+    const chartGroup = svg.select('g.chart-group')
+    const children = chartGroup.selectAll(function () {
       return this.childNodes
     })
 
-    let existingElements = children.filter(`g.${obj.plotID}`)
+    const existingElements = children.filter(`g.${obj.plotID}`)
     if (existingElements.size() > 0) {
       return
     }
@@ -48,87 +40,79 @@ export default function () {
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
-    let index = obj.index % colorScheme.length
+    const index = obj.index % colorScheme.length
     obj.colour = colorScheme[index]
   }
 
   function drawData() {
-    let xs = obj.xs
-    let ys = obj.ys
-    let whereFtn = obj.where
-    let labels = obj.labels
-    let colours = obj.colours
-    let xScale = _container.xScale
-    let yScale = _container.yScale
+    const { xs } = obj
+    const { ys } = obj
+    const whereFtn = obj.where
+    const { labels } = obj
+    const { colours } = obj
+    const { xScale } = container
+    const { yScale } = container
 
-    let ipltr = interpolator({
-      xs: xs,
-      ys: ys,
-      where: whereFtn
+    const ipltr = interpolator({
+      xs,
+      ys,
+      where: whereFtn,
     })
 
-    let { newXs, newYs } = ipltr()
+    const { newXs, newYs } = ipltr()
 
-    let alpha = obj.alpha
-    let style = obj.style
-    let lineEffect = ''
+    const { alpha } = obj
+    // const { style } = obj
+    // let lineEffect = ''
 
     // set the line style
-    if (style == '--') {
-      lineEffect = 'stroke-dasharray'
-    }
+    // if (style === '--') {
+    //   lineEffect = 'stroke-dasharray'
+    // }
 
-    let svg = _container.svg
+    const { svg } = container
 
-    let chartGroup = svg.select(`.${obj.plotID}`)
+    const chartGroup = svg.select(`.${obj.plotID}`)
 
-    let colors = d3
-    .scaleOrdinal()
-    .domain(labels)
-    .range(colours)
+    const colors = d3.scaleOrdinal().domain(labels).range(colours)
 
     // console.log('after interpolate: newXs, newYs, newStartX, isWithin', newXs, newYs, newStartX, isWithin)
 
     // begin stacked area
-    let area = d3
+    const area = d3
       .area()
       .x((d: any, i: number) => {
-        let scaled = xScale(newXs[i]) 
+        const scaled = xScale(newXs[i])
         return scaled
       })
-      .y0((d: any, i: number) => {
-        let minY = yScale.domain()[0]
+      .y0(() => {
+        const minY = yScale.domain()[0]
         return yScale(minY)
       })
-      .y1((d: any, i: number) => {
-        return yScale(d)
-      })
+      .y1((d: any) => yScale(d))
 
-    let selectionUpdate = chartGroup.selectAll('path')
-    .data([newYs])
+    let selectionUpdate = chartGroup.selectAll('path').data([newYs])
 
-    selectionUpdate
-    .exit()
-    .remove()
+    selectionUpdate.exit().remove()
 
-    let enterSelection = selectionUpdate
-    .enter()
-    .append('path')
-    .attr('class', 'fill_between')
+    const enterSelection = selectionUpdate.enter().append('path').attr('class', 'fill_between')
 
     selectionUpdate = selectionUpdate.merge(enterSelection)
 
     selectionUpdate
-      .style('fill', (d: any) => {
-        return colors(d.key)
-      })
+      .style('fill', (d: any) => colors(d.key))
       .style('opacity', alpha)
-      .attr('d', (d: any, i: number) => {
-        return area(d, i)
-      })
+      // ! previously was this: .attr('d', (d: any, i: number) => area(d, i))
+      .attr('d', (d: any) => area(d))
   }
 
-  let callable_obj: any = plot
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    drawData()
+  }
+
+  const callableObj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -137,33 +121,33 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.on = function (_x: any) {
-    let value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
-  }
+  // callableObj.on = function (_x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
-  callable_obj.attr = function () {
+  callableObj.attr = function () {
     return obj
   }
 
-  callable_obj.where = function(_x: any) {
-    if(arguments.length) {
-      obj['where'] = _x
-      return callable_obj
+  callableObj.where = function (_x: any) {
+    if (arguments.length) {
+      obj.where = _x
+      return callableObj
     }
-    return obj['where']
+    return obj.where
   }
-  return callable_obj
+  return callableObj
 }

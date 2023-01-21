@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import ScatterPlot from './components/ScatterPlot/ScatterPlot'
-import BarPlot from './components/BarPlot/BarPlot'
+import { BarPlotContainer } from './components/BarPlot/BarPlot'
 import LinePlot from './components/LinePlot/LinePlot'
 import DynamicLinePlot from './components/DoublePlot/DynamicLinePlot'
 import GroupedBarPlot from './components/GroupedBarPlot/GroupedBarPlot'
@@ -10,7 +10,7 @@ import CandlestickPlot from './components/CandlestickPlot/CandlestickPlot'
 import StackedbarPlot from './components/StackedBarPlot/StackedBarPlot'
 import StackedAreaPlot from './components/StackedAreaPlot/StackedAreaPlot'
 import ViolinPlot from './components/ViolinPlot/ViolinPlot'
-import BoxPlot from './components/BoxPlot/BoxPlot'
+import { BoxPlotContainer } from './components/BoxPlot/BoxPlot'
 import DonutPlot from './components/DonutPlot/DonutPlot'
 import HeatmapPlot from './components/HeatmapPlot/HeatmapPlot'
 import HeartbeatPlot from './components/HeartbeatPlot/HeartbeatPlot'
@@ -35,14 +35,14 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <ScatterPlot />
       <LinePlot />
       <DynamicLinePlot />
-      <BarPlot />
+      <BarPlotContainer />
       <GroupedBarPlot />
       <HistogramPlot />
       <CandlestickPlot />
       <StackedbarPlot />
       <StackedAreaPlot />
       <ViolinPlot />
-      <BoxPlot />
+      <BoxPlotContainer />
       <DonutPlot />
       <HeatmapPlot />
       <HeartbeatPlot />

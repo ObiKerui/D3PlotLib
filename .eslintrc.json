@@ -4,13 +4,25 @@
         "es2021": true,
         "jest/globals": true
     },
-    "extends": ["airbnb", "prettier", "plugin:jest/recommended"],
+    "extends": [
+        "airbnb", 
+        "prettier", 
+        "plugin:jest/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
     "overrides": [],
     "plugins": ["prettier", "jest"],
     "rules": {
         "prettier/prettier": ["error"],
-        "max-len": [1, 70, 2, { "ignoreComments": true} ]
+        "max-len": [1, 120, 2, { "ignoreComments": true} ],
+        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "func-names": "off",
+        "import/extensions": "off",
+        "import/no-unresolved": "off"
     },
+    "root": true,
     "ignorePatterns": [
         "**/webpack.*",
         "**/buildtools/*", 

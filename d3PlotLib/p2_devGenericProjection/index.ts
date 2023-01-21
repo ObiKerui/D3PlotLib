@@ -1,23 +1,19 @@
-// p2_devGenericProjection/index.ts
-'use strict'
-
-declare const d3: any
-declare const moment: any
-declare const L: any
-declare const $: any
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as d3 from 'd3'
+import * as d3Geo from 'd3-geo'
+// import * as d3Dispatch from 'd3-dispatch'
 
 export default function () {
-  let obj: any = {}
+  const obj: any = {}
 
-  function getPathCreator(geojson : any, mapWidth: number, mapHeight: number) {
-
+  function getPathCreator(geojson: any, mapWidth: number, mapHeight: number) {
     // how it's done in the book example...
-    const projection = obj['projection']
+    const { projection } = obj
     const pathCreator = d3.geoPath().projection(projection)
 
     // Setup the scale and translate
-    projection.scale(1).translate([0, 0]);
-    var geographicBounds = pathCreator.bounds(geojson);
+    projection.scale(1).translate([0, 0])
+    const geographicBounds = pathCreator.bounds(geojson)
 
     const leftBottom = geographicBounds[0]
     const minLongitude = leftBottom[0]
@@ -54,26 +50,22 @@ export default function () {
     const translator = [widthScale, heightScale]
     // const translator = [subWidth, subHeight]
     // var translator = [(width - scaler * (geographicBounds[1][0] + geographicBounds[0][0])) / 2, (height - scaler * (geographicBounds[1][1] + geographicBounds[0][1])) / 2];
-    
-    projection
-    .scale(scaler)
-    .translate(translator)
+
+    projection.scale(scaler).translate(translator)
 
     return pathCreator
   }
 
   function toExport(containerAttrs: any, plottables: any) {
-
-    let geojsonList : any = []
-    let mapWidth = containerAttrs.mapWidth
-    let mapHeight = containerAttrs.mapHeight
+    let geojsonList: any = []
+    const { mapWidth } = containerAttrs
+    const { mapHeight } = containerAttrs
 
     // create a 2d array - each entry is an array of the y values
     // would not have to do this if plottable provides ys already in 2d array format...
     plottables.forEach((plottable: any) => {
-
-      let geojson = plottable.geojson()
-      if(typeof geojson === 'object' && !Array.isArray(geojson) && geojson !== null) {
+      const geojson = plottable.geojson()
+      if (typeof geojson === 'object' && !Array.isArray(geojson) && geojson !== null) {
         geojsonList = geojson
       }
 
@@ -86,12 +78,11 @@ export default function () {
     })
 
     // get/compute the chart width/height (may add padding to this in future)
-    console.log('geojson list: ', geojsonList)
-    let pathGenerator = getPathCreator(geojsonList, mapWidth, mapHeight)
+    const pathGenerator = getPathCreator(geojsonList, mapWidth, mapHeight)
     containerAttrs.projector = pathGenerator
   }
 
-  let callableObj: any = toExport
+  const callableObj: any = toExport
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -106,11 +97,11 @@ export default function () {
   }
 
   // generate the chart attributes
-  for (let attr in obj) {
-    if (!callableObj[attr] && obj.hasOwnProperty(attr)) {
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
       callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
   callableObj.attr = function () {
     return obj
@@ -118,10 +109,10 @@ export default function () {
 
   callableObj.projection = function (_x: any) {
     if (arguments.length) {
-      obj['projection'] = _x
+      obj.projection = _x
       return callableObj
     }
-    return callableObj['projection']
+    return callableObj.projection
   }
 
   return callableObj
