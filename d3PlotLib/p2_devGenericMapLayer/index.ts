@@ -112,13 +112,13 @@ export default function () {
     // let pathCreator = getPathCreator(geojson)
     const pathCreator = container.projector
 
-    const styling = {
-      stroke: 'Brown',
-      'stroke-opacity': '.2',
-      'stroke-width': '1px',
-      'fill-opacity': '.1',
-      fill: 'green',
-    }
+    const styling = `
+      stroke: Brown;
+      stroke-opacity: .2;
+      stroke-width: 1px;
+      fill-opacity: .1;
+      fill: green
+    `
 
     const mapGroup = svg.select(`.${obj.plotID}`)
 
@@ -150,7 +150,7 @@ export default function () {
         const result = pathCreator(param)
         return result
       })
-      .style((elem: any) => {
+      .attr('style', (elem: any) => {
         if (obj.onStyle) {
           return obj.onStyle({ elem })
         }

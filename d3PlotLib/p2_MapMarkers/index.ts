@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // MapMarkers/index.ts
 import * as d3 from 'd3'
@@ -130,7 +131,7 @@ export default function () {
   function drawData() {
     const { map } = container
     const { svg } = container
-    const pathCreator = getPathCreator(map)
+    // const pathCreator = getPathCreator(map)
     const { data } = obj
     const styling = {
       stroke: 'Orange',

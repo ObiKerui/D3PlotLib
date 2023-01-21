@@ -62,11 +62,9 @@ async function createDensityMap(ref: any) {
 
   const projector = d3PlotLib.DevMapProjection().projection(d3.geoAlbers())
 
-  const counties = (d3PlotLib.DevMapLayer() as any).geojson(statesGeojsonCopy).onStyle(() => ({
-    stroke: 'Brown',
-    'stroke-width': '.4',
-    'fill-opacity': '0',
-  }))
+  const counties = (d3PlotLib.DevMapLayer() as any)
+    .geojson(statesGeojsonCopy)
+    .onStyle(() => `stroke: Brown; stroke-width: .4; fill-opacity: 0;`)
 
   const unemployment = (d3PlotLib.DevMapLayer() as any)
     .geojson(countiesGeojsonCopy)
@@ -74,12 +72,12 @@ async function createDensityMap(ref: any) {
       const { elem } = args
       const { rate } = elem.properties
       const colour = colorScale(rate)
-      return {
-        stroke: 'Orange',
-        'stroke-width': '.1',
-        'fill-opacity': 1,
-        fill: colour,
-      }
+      return `
+        stroke: Orange;
+        stroke-width: .1;
+        fill-opacity: 1;
+        fill: ${colour};
+      `
     })
 
   const zoomer = d3PlotLib.DevZoom()

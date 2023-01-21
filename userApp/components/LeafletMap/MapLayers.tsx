@@ -19,12 +19,12 @@ async function createElectionMap(ref: any) {
     const { zoomLevel } = args
     const strokeWidth = zoomLevel > 8 ? '1px' : '0.1px'
     const fillOpacity = zoomLevel > 8 ? '.3' : '.4'
-    return {
-      stroke: 'blue',
-      'stroke-width': strokeWidth,
-      'fill-opacity': fillOpacity,
-      fill: 'gray',
-    }
+    return `
+      stroke: blue;
+      stroke-width: ${strokeWidth};
+      fill-opacity: ${fillOpacity};
+      fill: gray;
+    `
   })
 
   const container = (d3PlotLib.MapContainer() as any)

@@ -162,17 +162,13 @@ export default function () {
     const exponent = 10
 
     const hexBin = d3Hexbin
-      .hexbin()
+      .hexbin<unknown>()
       // .radius(3.5)
       .radius(4)
       .x((d: any) => d.x)
       .y((d: any) => d.y)
 
-    // ! had to add this in to keep hexBin happy but why? I'm setting the .x and .y above
-    // ! won't this cause an error drawing map below now bc data isn't available?
-    const hexBinPoints: [number, number][] = allPoints.map((elem: any) => [elem.x, elem.y])
-
-    const hexPoints = hexBin(hexBinPoints)
+    const hexPoints = hexBin(allPoints)
     const { rolledUpData, maxLength } = rollupHexData(hexPoints)
 
     const colorScale = d3

@@ -60,12 +60,7 @@ export default function () {
     const { geojson } = obj
     const zoomLevel: number = map.getZoom()
 
-    const styling = {
-      stroke: 'Orange',
-      'stroke-width': '1px',
-      'fill-opacity': '.3',
-      fill: 'green',
-    }
+    const styling = 'stroke: Orange; stroke-width: 1px; fill-opacity: .3; fill: green;'
 
     const mapGroup = svg.select(`.${obj.plotID}`)
 
@@ -89,7 +84,7 @@ export default function () {
         const result = pathCreator(param)
         return result
       })
-      .style((elem: any) => {
+      .attr('style', (elem: any) => {
         if (obj.onStyle) {
           return obj.onStyle({ elem, zoomLevel })
         }

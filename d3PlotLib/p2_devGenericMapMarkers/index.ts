@@ -62,11 +62,11 @@ export default function () {
     const { data } = obj
     const pathCreator = container.projector
 
-    const styling = {
-      stroke: 'brown',
-      'stroke-width': '1px',
-      fill: 'red',
-    }
+    const styling = `
+      stroke: brown;
+      stroke-width: 1px;
+      fill: red;
+    `
 
     const mapGroup = svg.select(`.${obj.plotID}`)
 
@@ -92,7 +92,7 @@ export default function () {
         const res = proj(latlng)
         return `translate(${res[0]}, ${res[1]})`
       })
-      .style(styling)
+      .attr('style', styling)
   }
 
   function plot(_container: any) {
