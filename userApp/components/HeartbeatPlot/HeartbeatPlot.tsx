@@ -43,7 +43,8 @@ async function createHeartbeatPlot(ref: HTMLDivElement) {
     .alpha(0.3)
     .curve(d3.curveMonotoneX)
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
     .scale(scaler)

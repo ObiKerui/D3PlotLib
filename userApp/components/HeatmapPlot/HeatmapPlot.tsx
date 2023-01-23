@@ -38,7 +38,8 @@ async function createHeatmapPlot(ref: any) {
 
   const heatmap = d3PlotLib.Heatmap().ys(data)
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .xAxisText({ rotation: 65 })
     .yAxisText({ rotation: -40 })
     .scale(scaler)

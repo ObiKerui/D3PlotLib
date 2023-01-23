@@ -2,7 +2,7 @@
 // BarChart/index.ts
 
 import * as d3 from 'd3'
-import { dispatch } from 'd3-dispatch'
+// import { dispatch } from 'd3-dispatch'
 import { plotAttrs, barsAttrs } from '../ChartAttribs'
 
 const publicAttrs = {
@@ -17,12 +17,12 @@ export default function () {
   const obj: any = JSON.parse(JSON.stringify(publicAttrs))
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
+  // const dispatcher = dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
     // console.log('what is container when build groups: ', _container)
@@ -58,6 +58,8 @@ export default function () {
 
     const chartGroup = svg.select(`.${obj.plotID}`)
 
+    console.log('what is the data to bar plot: ', xs)
+
     // select all rect in svg.chart-group with the class bar
     let bars = chartGroup.selectAll('.bar').data(xs)
 
@@ -84,19 +86,19 @@ export default function () {
       })
       .attr('fill', () => 'red')
       .style('opacity', alpha)
-      .on('mouseover', function (d: unknown) {
+      .on('mouseover', function () {
         d3.select(this).style('cursor', 'pointer')
-        dispatcher.call('customMouseOver', this, d)
+        // dispatcher.call('customMouseOver', this, d)
       })
-      .on('mousemove', function (d: unknown) {
+      .on('mousemove', function () {
         d3.select(this).style('cursor', 'pointer')
-        dispatcher.call('customMouseMove', this, d)
+        // dispatcher.call('customMouseMove', this, d)
       })
-      .on('mouseout', function (d: unknown) {
-        dispatcher.call('customMouseOut', this, d)
+      .on('mouseout', () => {
+        // dispatcher.call('customMouseOut', this, d)
       })
-      .on('click', function (d: unknown) {
-        dispatcher.call('customMouseClick', this, d)
+      .on('click', () => {
+        // dispatcher.call('customMouseClick', this, d)
       })
   }
 

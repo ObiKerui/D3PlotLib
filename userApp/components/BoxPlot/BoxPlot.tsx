@@ -34,7 +34,8 @@ async function createBoxPlot(ref: HTMLDivElement, csvresult: any) {
 
   const boxplot = d3PlotLib.BoxPlot().ys(ys).labels(labels)
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
     .scale(scaler)

@@ -25,7 +25,8 @@ async function createGroupedBarPlot(ref: HTMLElement) {
 
   const legend = d3PlotLib.Legend()
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')
     .scale(scaler)

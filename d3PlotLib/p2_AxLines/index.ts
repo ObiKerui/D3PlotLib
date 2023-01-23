@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as d3Dispatch from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 import * as d3 from 'd3'
 import { lineAttrs } from '../ChartAttribs'
 
@@ -10,12 +10,12 @@ export default function () {
   let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
     const { svg } = container
@@ -122,18 +122,18 @@ export default function () {
       .attr('stroke', strokeColour)
       .style('opacity', alpha)
       .style(lineEffect, '3, 3')
-      .on('mouseover', function (d: any) {
+      .on('mouseover', function () {
         d3.select(this).style('cursor', 'pointer')
-        dispatcher.call('customMouseOver', this, d)
+        // dispatcher.call('customMouseOver', this, d)
       })
-      .on('mousemove', function (d: any) {
-        dispatcher.call('customMouseMove', this, d)
+      .on('mousemove', () => {
+        // dispatcher.call('customMouseMove', this, d)
       })
-      .on('mouseout', function (d: any) {
-        dispatcher.call('customMouseOut', this, d)
+      .on('mouseout', () => {
+        // dispatcher.call('customMouseOut', this, d)
       })
-      .on('click', function (d: any) {
-        dispatcher.call('customMouseClick', this, d)
+      .on('click', () => {
+        // dispatcher.call('customMouseClick', this, d)
       })
   }
 

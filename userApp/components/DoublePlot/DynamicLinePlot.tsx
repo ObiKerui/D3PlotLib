@@ -42,7 +42,8 @@ async function createPrimaryLinePlot(ref: HTMLDivElement) {
 
   const plot2 = d3PlotLib.Plot().xs(xs).ys(ys2).tag('plot2').labels('Skew')
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .margin({ left: 50, right: 20, top: 10, bottom: 40 })
     .height(300)
     .xAxisText({ rotation: 65 })
@@ -83,7 +84,8 @@ async function createSecondaryLinePlot(ref: HTMLDivElement, primaryPlot: any, pr
 
   // let plot2 = d3PlotLib.Plot().tag('plot2').labels('SkewNorm')
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .margin({ left: 50, right: 20, top: 10, bottom: 60 })
     .height(200)
     .xAxisLabel('X Axis')
@@ -150,7 +152,7 @@ export default function () {
       <div className="plot plot--container">
         <h3 id="dynamic-line-plot">Dynamic Line Plot</h3>
         <div className="plot--controls">
-          <button className="btn btn-primary" onClick={() => updatePlot()}>
+          <button type="button" className="btn btn-primary" onClick={() => updatePlot()}>
             Update Me!
           </button>
         </div>
