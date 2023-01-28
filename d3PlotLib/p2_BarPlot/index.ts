@@ -53,15 +53,15 @@ export default function () {
     const { svg } = container
     const { alpha } = obj
 
+    const xsValidated = Array.isArray(xs) ? xs : []
+
     // alpha is currently an array and somehow works
     // probably could be modified so the array length = data array length
 
     const chartGroup = svg.select(`.${obj.plotID}`)
 
-    console.log('what is the data to bar plot: ', xs)
-
     // select all rect in svg.chart-group with the class bar
-    let bars = chartGroup.selectAll('.bar').data(xs)
+    let bars = chartGroup.selectAll('.bar').data(xsValidated)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
     bars.exit().style('opacity', 0).remove()

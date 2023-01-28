@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 import useCreatePlot from '../UseCreatePlot'
 
-async function createBarPlot(ref: HTMLDivElement, data: any[]) {
+async function createBarPlot(ref: HTMLDivElement, data: unknown[]) {
   const [xs, bars, yLineData] = data
 
   const scaler = d3PlotLib
     .Scaler()
-    .xScale((xss: any) => d3.scaleBand().domain(xss).padding(0.1))
-    .yScale((ys: any) => {
+    .xScale((xss: string[]) => d3.scaleBand().domain(xss).padding(0.1))
+    .yScale((ys: number[]) => {
       const merged = [].concat([], ...ys)
       const extent = d3.extent(merged)
       return d3.scaleLinear().domain([0, +extent[1] + 1])
@@ -41,7 +40,11 @@ async function createBarPlot(ref: HTMLDivElement, data: any[]) {
   return container
 }
 
-function BarPlot({ data }: any): JSX.Element {
+interface Props {
+  data?: unknown[]
+}
+
+function BarPlot({ data }: Props): JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useCreatePlot(async () => {
@@ -72,7 +75,11 @@ function BarPlot({ data }: any): JSX.Element {
   )
 }
 
-function BarPlotContainer() {
+BarPlot.defaultProps = {
+  data: [],
+}
+
+function BarPlotContainer(): JSX.Element {
   const [data, setData] = useState([])
 
   const xs = [1, 2, 3, 4, 5, 6, 7, 8]

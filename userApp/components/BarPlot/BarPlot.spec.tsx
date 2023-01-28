@@ -3,16 +3,20 @@ import React from 'react'
 import { BarPlot } from './BarPlot'
 
 describe('BarPlot tests', () => {
-  it('should render empty without error', () => {
-    const { container } = render(<BarPlot />)
-    const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
-    expect(svgEl).not.toBe(null)
-  })
-
   it('should render without error', () => {
     const { container } = render(<BarPlot data={[]} />)
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
     expect(svgEl).not.toBe(null)
+  })
+
+  it('no bar information provided', () => {
+    const xs = [1, 2, 3, 4, 5, 6, 7, 8]
+    const { container } = render(<BarPlot data={[xs]} />)
+
+    const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
+
+    expect(svgEl).toHaveAttribute('width', '500')
+    expect(svgEl).toHaveAttribute('height', '400')
   })
 
   it('should render on page', () => {
