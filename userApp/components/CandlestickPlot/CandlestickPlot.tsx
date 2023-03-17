@@ -63,7 +63,8 @@ async function createCandleStick(ref: any) {
 
   const legend = d3PlotLib.Legend()
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .xAxisLabel('Time')
     .xAxisText({ rotation: 65 })
     .yAxisLabel('Value')

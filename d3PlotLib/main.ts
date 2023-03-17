@@ -25,6 +25,10 @@ import p2_MapContainer from './p2_MapContainer '
 import p2_MapMarkers from './p2_MapMarkers'
 import p2_MapLayer from './p2_MapLayer'
 
+// added for google maps
+import p2_GoogleMapContainer from './p2_GoogleMapContainer'
+import p2_GoogleMapLayer from './p2_GoogleMapContainer/googleMapLayer'
+
 import p2_devGenericMapContainer from './p2_devGenericMapContainer'
 import p2_devGenericProjection from './p2_devGenericProjection'
 import p2_devGenericMapLayer from './p2_devGenericMapLayer'
@@ -55,8 +59,9 @@ export {
   p2_Donut as DonutPlot,
   p2_ScatterPlot as ScatterPlot,
   p2_Heatmap as Heatmap,
-
   // phase 3
+  p2_GoogleMapContainer as GoogleMapContainer,
+  p2_GoogleMapLayer as GoogleMapLayer,
   p2_MapContainer as MapContainer,
   p2_MapMarkers as MapMarkers,
   p2_MapLayer as MapLayer,

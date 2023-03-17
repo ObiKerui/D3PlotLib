@@ -46,7 +46,8 @@ function createLinePlot(ref: HTMLDivElement) {
 
   const legend = d3PlotLib.Legend().position('topleft')
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .showMargins(false)
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')

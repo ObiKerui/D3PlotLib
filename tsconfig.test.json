@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "target": "es2015",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "module": "commonjs",
+        "jsx": "react",
+        "paths": {
+            "node_modules/*": ["*"]
+        },
+        "esModuleInterop": true,
+        "typeRoots": ["./node_modules/@types", "./types"]
+    },
+    "include": [
+        "userApp/**/*", "D3PlotLib/**/*", "types/**/*"
+    ],
+    "exclude": [
+        "buildtools/**/*", "./node_modules"
+    ]
+}

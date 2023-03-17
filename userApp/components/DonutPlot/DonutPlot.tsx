@@ -43,12 +43,10 @@ async function createDonutPlot(ref: any): Promise<any> {
 
 export default function () {
   const ref = useRef(null)
-  let plotObj: any = null
 
   useCreatePlot(async () => {
     const currRef = ref.current
-    const obj = await createDonutPlot(currRef)
-    plotObj = obj
+    await createDonutPlot(currRef)
   })
 
   return (

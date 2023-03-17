@@ -3,21 +3,17 @@
 import * as d3 from 'd3'
 // import * as d3Dispatch from 'd3-dispatch'
 
-import { scaleAttrs, containerAttrs, axisAttrs } from '../ChartAttribs'
+import { scaleAttrs, containerAttrs, axisAttrs, scaleAttrsType } from '../ChartAttribs'
 
-const publicAttributes = {
+const publicAttributes: scaleAttrsType = {
   ...scaleAttrs,
   ...containerAttrs,
   ...axisAttrs,
 } as const
 
-export default function () {
+function Container() {
   const obj: any = JSON.parse(JSON.stringify(publicAttributes))
   const plots: any = []
-
-  // console.log('P2 Container: what is public attrs: ', publicAttributes)
-  // console.log('P2 Container: what is after stringify: ', JSON.stringify(publicAttributes))
-  // console.log('P2 Container: what is public attrs: ', obj)
 
   // Dispatcher object to broadcast the mouse events
   // const dispatcher = d3Dispatch.dispatch(
@@ -291,8 +287,8 @@ export default function () {
 
   const chart: any = toExport
 
-  function generateAccessor(attr: any) {
-    function accessor(value: any) {
+  function generateAccessor<Type>(attr: string) {
+    function accessor(value: Type): any {
       if (!arguments.length) {
         return obj[attr]
       }
@@ -301,22 +297,6 @@ export default function () {
       return chart
     }
     return accessor
-  }
-
-  // generate the chart attributes
-  Object.keys(obj).forEach((attr: any) => {
-    if (!chart[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
-      chart[attr] = generateAccessor(attr)
-    }
-  })
-
-  // toExport.on = function (_x: any) {
-  //   const value = dispatcher.on.apply(dispatcher, arguments)
-  //   return value === dispatcher ? toExport : value
-  // }
-
-  toExport.attr = function () {
-    return obj
   }
 
   toExport.plot = function (x: any) {
@@ -334,5 +314,19 @@ export default function () {
     return toExport
   }
 
+  toExport.scale = generateAccessor<unknown>('scale')
+  toExport.legend = generateAccessor<unknown>('legend')
+  toExport.showMargins = generateAccessor<boolean | null>('showMargins')
+  toExport.height = generateAccessor<number | null>('height')
+  toExport.width = generateAccessor<number | null>('width')
+  toExport.margin = generateAccessor<object>('margin')
+  toExport.xAxisLabel = generateAccessor<string | null>('xAxisLabel')
+  toExport.xAxisText = generateAccessor<unknown>('xAxisText')
+  toExport.yAxisLabel = generateAccessor<string | null>('yAxisLabel')
+  toExport.yAxisText = generateAccessor<unknown>('yAxisText')
+  toExport.yAxisPosition = generateAccessor<unknown>('yAxisPosition')
+
   return toExport
 }
+
+export default Container

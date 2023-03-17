@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as d3Dispatch from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 import * as d3 from 'd3'
 import { lineAttrs } from '../ChartAttribs'
 
@@ -10,12 +10,12 @@ export default function () {
   let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
     const { svg } = container
@@ -90,7 +90,7 @@ export default function () {
     const xStart = extent[0]
     const xEnd = extent[1]
 
-    const yPoints = ys
+    const ysValidated = Array.isArray(ys) ? ys : []
 
     xScale = d3
       .scaleLinear()
@@ -103,7 +103,7 @@ export default function () {
 
     const chartGroup = svg.select(`.${obj.lineID}`)
 
-    let lines = chartGroup.selectAll('.lines').data(yPoints)
+    let lines = chartGroup.selectAll('.lines').data(ysValidated)
 
     // Exit - remove data points if current data.length < data.length last time this ftn was called
     lines.exit().style('opacity', 0).remove()
@@ -133,18 +133,18 @@ export default function () {
       .attr('stroke', strokeColour)
       .style('opacity', alpha)
       .style(lineEffect, '3, 3')
-      .on('mouseover', function (d: any) {
+      .on('mouseover', function () {
         d3.select(this).style('cursor', 'pointer')
-        dispatcher.call('customMouseOver', this, d)
+        // dispatcher.call('customMouseOver', this, d)
       })
-      .on('mousemove', function (d: any) {
-        dispatcher.call('customMouseMove', this, d)
+      .on('mousemove', () => {
+        // dispatcher.call('customMouseMove', this, d)
       })
-      .on('mouseout', function (d: any) {
-        dispatcher.call('customMouseOut', this, d)
+      .on('mouseout', () => {
+        // dispatcher.call('customMouseOut', this, d)
       })
-      .on('click', function (d: any) {
-        dispatcher.call('customMouseClick', this, d)
+      .on('click', () => {
+        // dispatcher.call('customMouseClick', this, d)
       })
   }
 
@@ -157,8 +157,8 @@ export default function () {
 
   const callableObj: any = plot
 
-  function generateAccessor(attr: any) {
-    function accessor(value: any) {
+  function generateAccessor<Type>(attr: string) {
+    function accessor(value: Type): any {
       if (!arguments.length) {
         return obj[attr]
       }
@@ -169,26 +169,15 @@ export default function () {
     return accessor
   }
 
-  // generate the chart attributes
-  // for (const attr in obj) {
-  //   if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-  //     callable_obj[attr] = generateAccessor(attr)
-  //   }
-  // }
-  Object.keys(obj).forEach((attr: any) => {
-    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
-      callableObj[attr] = generateAccessor(attr)
-    }
-  })
-
-  // callableObj.on = function () {
-  //   const value = dispatcher.on.apply(dispatcher, arguments)
-  //   return value === dispatcher ? callableObj : value
-  // }
-
-  callableObj.attr = function () {
-    return obj
-  }
+  callableObj.tag = generateAccessor<string | null>('tag')
+  callableObj.xs = generateAccessor<unknown>('xs')
+  callableObj.ys = generateAccessor<unknown>('ys')
+  callableObj.lineID = generateAccessor<string | null>('lineID')
+  callableObj.index = generateAccessor<number | null>('index')
+  callableObj.alpha = generateAccessor<number | null>('alpha')
+  callableObj.colours = generateAccessor<unknown>('colours')
+  callableObj.labels = generateAccessor<unknown>('labels')
+  callableObj.styles = generateAccessor<string | null>('styles')
 
   return callableObj
 }

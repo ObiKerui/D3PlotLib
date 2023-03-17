@@ -5,7 +5,12 @@ module.exports = {
 
   // Jest transformations -- this adds support for TypeScript using ts-jest
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '\\.[jt]sx?$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+      },
+    ],
   },
 
   testEnvironment: 'jsdom',
@@ -30,5 +35,8 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
     '\\.(gif|ttf|eot|svg)$': '<rootDir>/__mocks__/fileMock.js',
+    '^d3$': '<rootDir>/node_modules/d3/dist/d3.min.js',
+    '^d3-hexbin$': `<rootDir>/node_modules/d3-hexbin/build/d3-hexbin.min.js`,
+    '^d3-(.*)$': `<rootDir>/node_modules/d3-$1/dist/d3-$1.min.js`,
   },
 }

@@ -45,7 +45,8 @@ function createHistogram(ref: any) {
     .colours(['blue'])
     .labels(['filled in'])
 
-  const container = (d3PlotLib.Container() as any)
+  const container = d3PlotLib
+    .Container()
     .scale(scaler)
     .xAxisLabel('X Axis')
     .yAxisLabel('Y Axis')

@@ -18,6 +18,11 @@ export const containerAttrs = {
   legend: null as any,
 } as const
 
+export type scaleAttrsType = {
+  xScale: number | null
+  yScale: number | null
+}
+
 export const scaleAttrs = {
   xScale: null as any,
   yScale: null as any,

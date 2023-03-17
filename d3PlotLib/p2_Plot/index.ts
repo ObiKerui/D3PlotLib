@@ -1,30 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3'
-import * as d3Dispatch from 'd3-dispatch'
+// import * as d3Dispatch from 'd3-dispatch'
 import { plotAttrs } from '../ChartAttribs'
 
 const colorScheme = ['red', 'green', 'blue', 'grey']
 
 export default function () {
   const obj: any = JSON.parse(JSON.stringify(plotAttrs))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any) {
-    _container = container
-    buildContainerGroups()
-    prepareData()
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select('g.chart-group')
     const children = chartGroup.selectAll(function () {
@@ -40,8 +34,8 @@ export default function () {
     obj.plotID = `plot-${obj.index}`
     const plotGroup = chartGroup.append('g').classed(`${obj.plotID}`, true)
 
-    const containerWidth = _container.chartWidth
-    const containerHeight = _container.chartHeight
+    const containerWidth = container.chartWidth
+    const containerHeight = container.chartHeight
     obj.clipPathId = `${obj.plotID}-clippath`
 
     plotGroup
@@ -54,7 +48,7 @@ export default function () {
     // console.log('p2_Plot : obj/chart-group/children : ', obj, chartGroup, children)
 
     // set the colour etc
-    const index = obj.index % colorScheme.length
+    // const index = obj.index % colorScheme.length
 
     obj.colours = obj.colours.length === 0 ? colorScheme : obj.colours
     // obj.colours = colorScheme
@@ -81,17 +75,17 @@ export default function () {
     const { ys } = obj
     const { xs } = obj
 
-    const { index } = obj
+    // const { index } = obj
     const strokeColours = obj.colours
-    const { xScale } = _container
-    const { yScale } = _container
-    const containerWidth = _container.width
-    const containerHeight = _container.height
+    const { xScale } = container
+    const { yScale } = container
+    // const containerWidth = container.width
+    // const containerHeight = container.height
 
     // console.log('plot draw : obj / xs / ys / test xscale / test yscale ', obj, xs, ys, xScale(xs[0]), yScale(ys[0]))
 
     const { alpha } = obj
-    const { styles } = obj
+    // const { styles } = obj
     const lineEffect = ''
     const curveType = obj.curve ?? d3.curveLinear
 
@@ -100,7 +94,7 @@ export default function () {
     //   lineEffect = "stroke-dasharray"
     // }
 
-    const { svg } = _container
+    const { svg } = container
 
     const chartGroup = svg.select(`.${obj.plotID}`)
 
@@ -152,22 +146,29 @@ export default function () {
           alpha[i]
       )
       .style(lineEffect, '3, 3')
-      .on('mouseover', function (d: any) {
+      .on('mouseover', function () {
         d3.select(this).style('cursor', 'pointer')
-        dispatcher.call('customMouseOver', this, d)
+        // dispatcher.call('customMouseOver', this, d)
       })
-      .on('mousemove', function (d: any) {
-        dispatcher.call('customMouseMove', this, d)
+      .on('mousemove', () => {
+        // dispatcher.call('customMouseMove', this, d)
       })
-      .on('mouseout', function (d: any) {
-        dispatcher.call('customMouseOut', this, d)
+      .on('mouseout', () => {
+        // dispatcher.call('customMouseOut', this, d)
       })
-      .on('click', function (d: any) {
-        dispatcher.call('customMouseClick', this, d)
+      .on('click', () => {
+        // dispatcher.call('customMouseClick', this, d)
       })
   }
 
-  const callable_obj: any = plot
+  function plot(_container: any) {
+    container = _container
+    buildContainerGroups()
+    prepareData()
+    drawData()
+  }
+
+  const callableObj: any = plot
 
   function generateAccessor(attr: any) {
     function accessor(value: any) {
@@ -176,39 +177,39 @@ export default function () {
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
   // generate the chart attributes
-  for (const attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
+  Object.keys(obj).forEach((attr: any) => {
+    if (!callableObj[attr] && Object.prototype.hasOwnProperty.call(obj, attr)) {
+      callableObj[attr] = generateAccessor(attr)
     }
-  }
+  })
 
-  callable_obj.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
-  }
+  // callableObj.on = function (x: any) {
+  //   const value = dispatcher.on.apply(dispatcher, arguments)
+  //   return value === dispatcher ? callableObj : value
+  // }
 
-  callable_obj.attr = function () {
+  callableObj.attr = function () {
     return obj
   }
 
-  callable_obj.extent = function () {
+  callableObj.extent = function () {
     // console.log('obj xs and ys: ', obj.xs, obj.ys)
 
-    const x_extent = d3.extent(obj.xs, (elem: any) => elem)
+    const xExtent = d3.extent(obj.xs, (elem: any) => elem)
 
-    const y_extent = d3.extent(obj.ys, (elem: any) => elem)
+    const yExtent = d3.extent(obj.ys, (elem: any) => elem)
 
     return {
-      x: x_extent,
-      y: y_extent,
+      x: xExtent,
+      y: yExtent,
     }
   }
 
-  return callable_obj
+  return callableObj
 }

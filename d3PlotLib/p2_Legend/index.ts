@@ -1,27 +1,21 @@
-import * as d3Dispatch from 'd3-dispatch'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import * as d3Dispatch from 'd3-dispatch'
 import { legendAttrs } from '../ChartAttribs'
 
-export default function () {
+function Legend() {
   const obj: any = JSON.parse(JSON.stringify(legendAttrs))
-  let _container: any = null
+  let container: any = null
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = d3Dispatch.dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function plot(container: any, plottables: any) {
-    _container = container
-    buildContainerGroups()
-    buildLegendData(plottables)
-    drawData()
-  }
+  // const dispatcher = d3Dispatch.dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildContainerGroups() {
-    const { svg } = _container
+    const { svg } = container
 
     const metadataGroup = svg.select('g.metadata-group')
     const children = metadataGroup.selectAll(function () {
@@ -36,16 +30,16 @@ export default function () {
     obj.index = children.size()
     obj.legendID = `legend-${obj.index}`
 
-    const legend_id = metadataGroup.append('g').classed(`${obj.legendID}`, true)
-    const legend_id_ap = legend_id.append('g').classed('anchorpoint', true)
-    legend_id_ap.append('rect').classed('background', true)
-    legend_id_ap.append('g').classed('innermargin', true)
+    const legendId = metadataGroup.append('g').classed(`${obj.legendID}`, true)
+    const legendIdAp = legendId.append('g').classed('anchorpoint', true)
+    legendIdAp.append('rect').classed('background', true)
+    legendIdAp.append('g').classed('innermargin', true)
   }
 
   function buildLegendData(plottables: any) {
-    const all_entries = plottables.map((plot: any) => {
-      const labels = plot.labels() ? plot.labels() : ['none']
-      const colours = plot.colours() ? plot.colours() : ['white']
+    const allEntries = plottables.map((_plot: any) => {
+      const labels = _plot.labels() ? _plot.labels() : ['none']
+      const colours = _plot.colours() ? _plot.colours() : ['white']
 
       const entries = labels.map((element: any, ith: number) => ({
         label: element,
@@ -54,7 +48,7 @@ export default function () {
       return entries
     })
 
-    obj.legendData = [].concat.apply([], all_entries)
+    obj.legendData = [].concat([], ...allEntries)
   }
 
   function repositionAnchorPoint(
@@ -89,6 +83,7 @@ export default function () {
       case 'bottomright':
         xPos = chartWidth * 0.6
         yPos = chartHeight * 0.6
+        break
       default:
         break
     }
@@ -96,7 +91,7 @@ export default function () {
   }
 
   function drawData() {
-    const { svg } = _container
+    const { svg } = container
     const metadataGroup = svg.select(`.${obj.legendID}`)
     const anchorPoint = metadataGroup.select('g.anchorpoint')
     const rectBackground = anchorPoint.select('rect.background')
@@ -104,8 +99,8 @@ export default function () {
     const keys = obj.legendData
     const size = 10
     const position = obj.position ?? 'topleft'
-    const { chartWidth } = _container
-    const { chartHeight } = _container
+    const { chartWidth } = container
+    const { chartHeight } = container
     const margin = 5
 
     let [xOffset, yOffset] = repositionAnchorPoint(position, chartWidth, chartHeight)
@@ -168,35 +163,33 @@ export default function () {
       .style('font-size', '.8em')
   }
 
-  const callable_obj: any = plot
+  function plot(_container: any, plottables: any) {
+    container = _container
+    buildContainerGroups()
+    buildLegendData(plottables)
+    drawData()
+  }
 
-  function generateAccessor(attr: any) {
-    function accessor(value: any) {
+  const callableObj: any = plot
+
+  function generateAccessor<Type>(attr: string) {
+    function accessor(value: Type): any {
       if (!arguments.length) {
         return obj[attr]
       }
       obj[attr] = value
 
-      return callable_obj
+      return callableObj
     }
     return accessor
   }
 
-  // generate the chart attributes
-  for (const attr in obj) {
-    if (!callable_obj[attr] && obj.hasOwnProperty(attr)) {
-      callable_obj[attr] = generateAccessor(attr)
-    }
-  }
+  callableObj.legendID = generateAccessor<string | null>('legendID')
+  callableObj.index = generateAccessor<number | null>('index')
+  callableObj.data = generateAccessor<unknown>('data')
+  callableObj.position = generateAccessor<string | null>('position')
 
-  callable_obj.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? callable_obj : value
-  }
-
-  callable_obj.attr = function () {
-    return obj
-  }
-
-  return callable_obj
+  return callableObj
 }
+
+export default Legend
