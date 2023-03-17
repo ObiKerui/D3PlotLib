@@ -42,6 +42,7 @@ export default function () {
     chartGroup
       .append('clipPath')
       .attr('id', obj.clipPathId)
+      .classed('clip-path', true)
       .append('rect')
       .attr('width', containerWidth + 30)
       .attr('height', containerHeight)
@@ -164,11 +165,6 @@ export default function () {
       callableObj[attr] = generateAccessor(attr)
     }
   })
-
-  // callableObj.on = function (_x: any) {
-  //   const value = dispatcher.on.apply(dispatcher, arguments)
-  //   return value === dispatcher ? callableObj : value
-  // }
 
   callableObj.attr = function () {
     return obj

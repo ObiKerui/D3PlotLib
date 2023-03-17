@@ -42,6 +42,7 @@ export default function () {
     chartGroup
       .append('clipPath')
       .attr('id', obj.clipPathId)
+      .classed('clip-path', true)
       .append('rect')
       .attr('width', containerWidth + 30)
       .attr('height', containerHeight)
@@ -96,10 +97,6 @@ export default function () {
       .scaleLinear()
       .domain(d3.extent(xScale.domain() as number[]))
       .range(xScale.range())
-
-    // console.log('x start / x end: ', xStart, xEnd, xScale.domain(), xScale.range())
-    // console.log('y points: ', yPoints)
-    // console.log('show yStart / yEnd / xs / ys / xPoints / ypoints: ', xStart, xEnd, xs, ys, yPoints)
 
     const chartGroup = svg.select(`.${obj.lineID}`)
 
