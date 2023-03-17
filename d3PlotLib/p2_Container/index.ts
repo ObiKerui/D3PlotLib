@@ -76,8 +76,6 @@ function Container() {
   function buildContainerGroups(svg: any) {
     const marginLeft = obj.margin.left
     const marginTop = obj.margin.top
-    // marginLeft = 50
-    // marginTop = 20
 
     const container = svg
       .append('g')
@@ -97,18 +95,11 @@ function Container() {
     container.append('g').classed('y-axis-label', true)
 
     container.append('g').classed('metadata-group', true)
-
-    // console.log('P2_Container/index/buildcontainerGroups: built the container groups: ', container)
   }
 
   function buildSVG(container: any) {
-    // console.log('P2_Container/index/buildSVG: ', obj)
-
     if (!obj.svg) {
       obj.svg = d3.select(container).append('svg').classed('jschart-container', true)
-
-      // console.log('P2-Container/index/buildSVG: what is obj.svg: ', obj.svg)
-
       buildContainerGroups(obj.svg)
     }
     obj.svg.attr('width', obj.width).attr('height', obj.height)

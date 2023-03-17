@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const containerAttrs = {
   svg: null as any,
-  width: 500 as number,
-  height: 400 as number,
+  width: 500,
+  height: 400,
 
   margin: {
     bottom: 50,
@@ -11,9 +11,9 @@ export const containerAttrs = {
     top: 20,
   },
 
-  chartWidth: 0 as number,
-  chartHeight: 0 as number,
-  showMargins: false as boolean,
+  chartWidth: 0,
+  chartHeight: 0,
+  showMargins: false,
   scale: null as any,
   legend: null as any,
 } as const
@@ -30,30 +30,30 @@ export const scaleAttrs = {
 
 export const axisAttrs = {
   xAxis: null as any,
-  xAxisLabel: '' as string,
-  xAxisPosition: 'bottom' as string,
-  xAxisLabelOffset: 30 as number,
+  xAxisLabel: '',
+  xAxisPosition: 'bottom',
+  xAxisLabelOffset: 30,
 
   xAxisText: {
     rotation: 0,
   },
 
   xAxisLabelEl: null as any,
-  xTicks: 5 as number,
-  xAxisShow: true as boolean,
+  xTicks: 5,
+  xAxisShow: true,
   xGrid: null as any,
-  xGridShow: false as boolean,
+  xGridShow: false,
 
   yAxis: null as any,
-  yAxisLabel: '' as string,
-  yAxisPosition: 'left' as string,
-  yAxisLabelOffset: -30 as number,
+  yAxisLabel: '',
+  yAxisPosition: 'left',
+  yAxisLabelOffset: -30,
   yAxisLabelEl: null as any,
-  yAxisPaddingBetweenChart: 10 as number,
-  yTicks: 5 as number,
-  yAxisShow: true as boolean,
+  yAxisPaddingBetweenChart: 10,
+  yTicks: 5,
+  yAxisShow: true,
   yGrid: null as any,
-  yGridShow: true as boolean,
+  yGridShow: true,
 
   yAxisText: {
     rotation: 0,
