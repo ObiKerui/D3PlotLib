@@ -17,6 +17,7 @@
         { "basic-map" : "Basic Map" },
         { "hexbin-map" : "Hexbin Map" },
         { "density-map" : "Density Map" },
-        { "leaflet-map" : "Leaflet Map" }                    
+        { "leaflet-map" : "Leaflet Map" },
+        { "google-map" : "Google Map" }                    
     ]
 }

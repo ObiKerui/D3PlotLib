@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // MapContainer/index.ts
 import * as d3 from 'd3'
-import { dispatch } from 'd3-dispatch'
+// import { dispatch } from 'd3-dispatch'
 import * as L from 'leaflet'
 import { plotAttrs, containerAttrs } from '../MapAttribs'
 
@@ -14,34 +15,12 @@ export default function () {
   const plots: any = []
 
   // Dispatcher object to broadcast the mouse events
-  const dispatcher = dispatch(
-    'customMouseOver',
-    'customMouseMove',
-    'customMouseOut',
-    'customMouseClick'
-  )
-
-  function toExport(html_selection: any) {
-    if (obj.showMargins) {
-      obj.svg.style('background-color', 'rgba(255, 0, 0, .2)')
-    }
-
-    obj.chartWidth = obj.width - obj.margin.left - obj.margin.right
-    obj.chartHeight = obj.height - obj.margin.top - obj.margin.bottom
-
-    buildMap(html_selection)
-    buildSVG(html_selection)
-
-    obj.map.on('zoomend', () => {
-      plots.forEach((plot: any) => {
-        plot(obj)
-      })
-    })
-
-    plots.forEach((plot: any) => {
-      plot(obj)
-    })
-  }
+  // const dispatcher = dispatch(
+  //   'customMouseOver',
+  //   'customMouseMove',
+  //   'customMouseOut',
+  //   'customMouseClick'
+  // )
 
   function buildSVG(container: any) {
     let div = null
@@ -60,10 +39,10 @@ export default function () {
     }
   }
 
-  function buildMap(html_selection: any) {
-    const { viewType } = obj
-    const mapCompDiv = html_selection
-    const { accessToken } = obj
+  function buildMap(htmlSelection: any) {
+    // const { viewType } = obj
+    const mapCompDiv = htmlSelection
+    // const { accessToken } = obj
     const { zoom } = obj
     const { position } = obj
 
@@ -91,10 +70,32 @@ export default function () {
     }
   }
 
+  function toExport(htmlSelection: any) {
+    if (obj.showMargins) {
+      obj.svg.style('background-color', 'rgba(255, 0, 0, .2)')
+    }
+
+    obj.chartWidth = obj.width - obj.margin.left - obj.margin.right
+    obj.chartHeight = obj.height - obj.margin.top - obj.margin.bottom
+
+    buildMap(htmlSelection)
+    buildSVG(htmlSelection)
+
+    obj.map.on('zoomend', () => {
+      plots.forEach((plot: any) => {
+        plot(obj)
+      })
+    })
+
+    plots.forEach((plot: any) => {
+      plot(obj)
+    })
+  }
+
   const chart: any = toExport
 
-  function generateAccessor(attr: any) {
-    function accessor(value: any) {
+  function generateAccessor<Type>(attr: string) {
+    function accessor(value: Type): any {
       if (!arguments.length) {
         return obj[attr]
       }
@@ -105,36 +106,26 @@ export default function () {
     return accessor
   }
 
-  // generate the chart attributes
-  for (const attr in obj) {
-    if (!chart[attr] && obj.hasOwnProperty(attr)) {
-      chart[attr] = generateAccessor(attr)
+  toExport.plot = function (x: any) {
+    if (Number.isInteger(x) && plots.length > 0) {
+      return plots[x]
     }
-  }
-
-  toExport.on = function (_x: any) {
-    const value = dispatcher.on.apply(dispatcher, arguments)
-    return value === dispatcher ? toExport : value
-  }
-
-  toExport.attr = function () {
-    return obj
-  }
-
-  toExport.plot = function (_x: any) {
-    if (Number.isInteger(_x) && plots.length > 0) {
-      return plots[_x]
-    }
-    if (typeof _x === 'string') {
-      const labels = plots.filter((elem: any) => elem.tag() === _x)
+    if (typeof x === 'string') {
+      const labels = plots.filter((elem: any) => elem.tag() === x)
       if (labels.length > 0) {
         return labels[0]
       }
       return null
     }
-    plots.push(_x)
+    plots.push(x)
     return toExport
   }
+
+  toExport.geojson = generateAccessor<unknown>('geojson')
+  toExport.data = generateAccessor<unknown>('data')
+  toExport.viewType = generateAccessor<string | null>('viewType')
+  toExport.position = generateAccessor<number[] | null>('position')
+  toExport.zoom = generateAccessor<number | null>('zoom')
 
   return toExport
 }
