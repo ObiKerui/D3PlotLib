@@ -31,18 +31,6 @@ const np = {
   },
 }
 
-// const norm = {
-//   pdf(xs: number[]): number[] {
-//     const fnorm = (x: number) => (1 / Math.sqrt(2 * Math.PI)) * Math.exp((-x * x) / 2)
-//     const result = xs.map((elem: number) => fnorm(elem))
-//     // var y = new Array()
-//     // for (var i = 0 ; i < x.length ; i++) {
-//     //     y[i] = fnorm(x[i])
-//     // }
-//     return result
-//   },
-// }
-
 async function createScatterPlot(ref: HTMLDivElement) {
   const csvresult = await d3.csv('assets/iris.csv')
 
@@ -70,8 +58,8 @@ async function createScatterPlot(ref: HTMLDivElement) {
 
   const scatterPlot = d3PlotLib
     .ScatterPlot()
-    .xs(xs)
     .ys(ys)
+    .xs(xs)
     .colours(['red', 'green', 'blue', 'black'])
     .labels(keys)
 

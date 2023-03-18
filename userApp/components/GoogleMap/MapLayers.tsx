@@ -4,17 +4,25 @@ import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 
 import CodeBlock from '../CodeBlock'
+import importGeojson from '../../utils/mapDataUtils'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 
 // declare const topojson: any
 
 async function createElectionMap(ref: HTMLDivElement) {
-  let geojson = await d3.json('assets/NE.geojson')
+  const geojson = await importGeojson('assets/NE.geojson')
+  // const geojson = await d3.json('assets/NE.geojson')
   geojson.features = [geojson.features[10]]
-  let newCoordsArr = geojson.features[0].geometry.coordinates
+
+  const newCoordsArr = geojson.features[0].geometry.coordinates
   let arrayOf162Points = newCoordsArr[0]
-  arrayOf162Points = [arrayOf162Points[0], arrayOf162Points[50], arrayOf162Points[100], arrayOf162Points[161]]
+  arrayOf162Points = [
+    arrayOf162Points[0],
+    arrayOf162Points[50],
+    arrayOf162Points[100],
+    arrayOf162Points[161],
+  ]
 
   geojson.features[0].geometry.coordinates = [arrayOf162Points]
   // geojson.features[0].geometry.coordinates = newCoordsArr

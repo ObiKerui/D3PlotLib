@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import * as d3 from 'd3'
 import useCreatePlot from '../UseCreatePlot'
 import useResize from '../UseResize'
-import NumpyClone from '../NumpyClone'
+import NumpyClone from '../../utils/NumpyClone'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 
 declare const moment: any

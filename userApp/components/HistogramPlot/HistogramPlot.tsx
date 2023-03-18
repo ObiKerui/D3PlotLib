@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import * as d3 from 'd3'
 import * as d3PlotLib from '../../../d3PlotLib/main'
 import CodeBlock from '../CodeBlock'
-import np from '../NumpyClone'
+import np from '../../utils/NumpyClone'
 import useCreatePlot from '../UseCreatePlot'
 import content from './create'
 

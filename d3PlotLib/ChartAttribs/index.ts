@@ -1,6 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Axis, AxisDomain, AxisScale } from 'd3'
+
+// type NumberAxis = Axis<number>
+type YAxisPosition = 'left' | 'right'
+type XAxisPosition = 'bottom' | 'top'
+
+// type ScaleOrdinalType<Domain, Range> = ScaleOrdinal<Domain, Range>
+// type ScaleContinuousType = ScaleContinuousNumeric<unknown, number>
+// type AllD3PlotLibScales = ScaleContinuousType | ScaleOrdinalType<unknown, number>
+
 export const containerAttrs = {
-  svg: null as any,
+  svg: null as d3.Selection<SVGSVGElement, any, null, undefined> | null,
+
   width: 500,
   height: 400,
 
@@ -14,64 +25,59 @@ export const containerAttrs = {
   chartWidth: 0,
   chartHeight: 0,
   showMargins: false,
-  scale: null as any,
-  legend: null as any,
-} as const
-
-export type scaleAttrsType = {
-  xScale: number | null
-  yScale: number | null
+  scale: null as CallableFunction | null,
+  legend: null as CallableFunction | null,
 }
 
 export const scaleAttrs = {
-  xScale: null as any,
-  yScale: null as any,
-} as const
+  xScale: null as AxisScale<AxisDomain> | null,
+  yScale: null as AxisScale<AxisDomain> | null,
+}
 
 export const axisAttrs = {
-  xAxis: null as any,
+  xAxis: null as Axis<AxisDomain> | null,
   xAxisLabel: '',
-  xAxisPosition: 'bottom',
+  xAxisPosition: 'bottom' as XAxisPosition,
   xAxisLabelOffset: 30,
 
   xAxisText: {
     rotation: 0,
   },
 
-  xAxisLabelEl: null as any,
+  xAxisLabelEl: null as d3.Selection<SVGTextElement, any, null, undefined> | null,
   xTicks: 5,
   xAxisShow: true,
-  xGrid: null as any,
+  xGrid: null as Axis<AxisDomain> | null,
   xGridShow: false,
 
-  yAxis: null as any,
+  yAxis: null as Axis<AxisDomain> | null,
   yAxisLabel: '',
-  yAxisPosition: 'left',
+  yAxisPosition: 'left' as YAxisPosition,
   yAxisLabelOffset: -30,
-  yAxisLabelEl: null as any,
+  yAxisLabelEl: null as d3.Selection<SVGTextElement, any, null, undefined> | null,
   yAxisPaddingBetweenChart: 10,
   yTicks: 5,
   yAxisShow: true,
-  yGrid: null as any,
+  yGrid: null as Axis<AxisDomain> | null,
   yGridShow: true,
 
   yAxisText: {
     rotation: 0,
   },
-} as const
+}
 
 export const plotAttrs = {
   tag: null as string,
-  xs: [] as any,
-  ys: [] as any,
-  labels: [] as any,
+  xs: [] as unknown[],
+  ys: [] as unknown[],
+  labels: [] as string[],
   plotID: null as string,
   index: null as number,
-  alpha: [] as any,
-  styles: [] as any,
-  colours: [] as any,
-  curve: null as any,
-} as const
+  alpha: [] as unknown[],
+  styles: [] as unknown[],
+  colours: [] as string[],
+  curve: null as unknown,
+}
 
 export const barsAttrs = {
   tag: null as string,

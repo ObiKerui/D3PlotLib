@@ -18,7 +18,7 @@ import BasicMap from './components/BasicMap/BasicMap'
 import HexbinMap from './components/HexbinMap/HexbinMap'
 import DensityMap from './components/DensityMap/DensityMap'
 import LayerMap from './components/LeafletMap/MapLayers'
-import GoogleMap from './components/GoogleMap/MapLayers'
+// import GoogleMap from './components/GoogleMap/MapLayers'
 import Sidebar from './components/Sidebar'
 
 import './index.css'
@@ -51,7 +51,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <HexbinMap />
       <DensityMap />
       <LayerMap />
-      <GoogleMap />
+      {/* <GoogleMap /> */}
     </main>
     <footer>
       <p>footer matter</p>
