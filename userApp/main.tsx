@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import ScatterPlot from './components/ScatterPlot/ScatterPlot'
+import { ScatterPlotContainer } from './components/ScatterPlot/ScatterPlot'
 import { BarPlotContainer } from './components/BarPlot/BarPlot'
 import LinePlot from './components/LinePlot/LinePlot'
 import DynamicLinePlot from './components/DoublePlot/DynamicLinePlot'
@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <header>
         <h1>D3PlotLib</h1>
       </header>
-      <ScatterPlot />
+      <ScatterPlotContainer />
       <LinePlot />
       <DynamicLinePlot />
       <BarPlotContainer />
