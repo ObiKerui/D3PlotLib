@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
-import { BarPlot } from '../userApp/components/BarPlot/BarPlot'
+import { ScatterPlot } from '../../../userApp/components/ScatterPlot/ScatterPlot'
 
-describe('BarPlot tests', () => {
+describe('ScatterPlot tests', () => {
   it('svg and child group elements should render', () => {
-    const { container } = render(<BarPlot data={[]} />)
+    const { container } = render(<ScatterPlot data={[]} />)
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
 
     // console.log(svgEl.classList.toString())
@@ -37,14 +37,14 @@ describe('BarPlot tests', () => {
 
   it('no bar information provided', () => {
     const xs: number[] = []
-    const { container } = render(<BarPlot data={[xs]} />)
+    const { container } = render(<ScatterPlot data={[xs]} />)
 
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
     expect(svgEl).not.toBe(null)
   })
 
   it('the height and width should be set correctly', () => {
-    const { container } = render(<BarPlot data={[]} />)
+    const { container } = render(<ScatterPlot data={[]} />)
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
 
     // check height and width
@@ -53,7 +53,7 @@ describe('BarPlot tests', () => {
   })
 
   it('should render the x and y axis elements correctly', () => {
-    const { container } = render(<BarPlot data={[]} />)
+    const { container } = render(<ScatterPlot data={[]} />)
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
     const xAxisGroup = svgEl.querySelector("[class='x-axis-label']")
     const yAxisGroup = svgEl.querySelector("[class='y-axis-label']")
@@ -71,7 +71,7 @@ describe('BarPlot tests', () => {
   })
 
   it('should render the correct number of plot elements', () => {
-    const { container } = render(<BarPlot data={[]} />)
+    const { container } = render(<ScatterPlot data={[]} />)
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
     const chartGroup = svgEl.querySelector("[class='chart-group']") as SVGElement
 
@@ -80,12 +80,12 @@ describe('BarPlot tests', () => {
       element.getAttribute('class')
     )
 
-    const expectedClasses = ['bars-0', 'line-1', 'clip-path']
+    const expectedClasses = ['plot-0']
     expect(expectedClasses).toEqual(actualClasses)
   })
 
-  it.only('should render the legend correctly', () => {
-    const { container } = render(<BarPlot data={[]} />)
+  it('should render the legend correctly', () => {
+    const { container } = render(<ScatterPlot data={[]} />)
     const svgEl = container.querySelector("[class='jschart-container']") as SVGElement
     const metadataGroup = svgEl.querySelector('[class=metadata-group]')
 
@@ -94,10 +94,10 @@ describe('BarPlot tests', () => {
       element.getAttribute('class')
     )
 
-    console.log('actual classes: ', actualClasses)
-    expect(true).toBe(true)
+    const expectedClasses = ['legend-0']
+    expect(expectedClasses).toEqual(actualClasses)
 
-    screen.debug(metadataGroup)
+    // screen.debug(metadataGroup)
 
     // get the metadata-group
     // check the g.anchorpoint

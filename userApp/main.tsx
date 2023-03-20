@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import ScatterPlot from './components/ScatterPlot/ScatterPlot'
+import { ScatterPlotContainer } from './components/ScatterPlot/ScatterPlot'
 import { BarPlotContainer } from './components/BarPlot/BarPlot'
 import LinePlot from './components/LinePlot/LinePlot'
 import DynamicLinePlot from './components/DoublePlot/DynamicLinePlot'
@@ -18,7 +18,7 @@ import BasicMap from './components/BasicMap/BasicMap'
 import HexbinMap from './components/HexbinMap/HexbinMap'
 import DensityMap from './components/DensityMap/DensityMap'
 import LayerMap from './components/LeafletMap/MapLayers'
-import GoogleMap from './components/GoogleMap/MapLayers'
+// import GoogleMap from './components/GoogleMap/MapLayers'
 import Sidebar from './components/Sidebar'
 
 import './index.css'
@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <header>
         <h1>D3PlotLib</h1>
       </header>
-      <ScatterPlot />
+      <ScatterPlotContainer />
       <LinePlot />
       <DynamicLinePlot />
       <BarPlotContainer />
@@ -51,7 +51,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <HexbinMap />
       <DensityMap />
       <LayerMap />
-      <GoogleMap />
+      {/* <GoogleMap /> */}
     </main>
     <footer>
       <p>footer matter</p>
